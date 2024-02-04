@@ -27,9 +27,9 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="prof.php">Enseignant</a>
                                     <a class="nav-link" href="ue.php">UE</a>
-                                    <a class="nav-link" href="">Salle</a>
-                                    <a class="nav-link" href="">Departement</a>
-                                    <a class="nav-link" href="">Classe</a>
+                                    <a class="nav-link" href="salle.php">Salle</a>
+                                    <a class="nav-link" href="departement.php">Departement</a>
+                                    <a class="nav-link" href="classe.php">Classe</a>
                                 </nav>
                             </div>
                             <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEdition" aria-expanded="false" aria-controls="collapseEdition">

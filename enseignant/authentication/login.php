@@ -54,7 +54,7 @@
                 $mail = htmlspecialchars( $_POST['mail']);
                 $mdp = htmlspecialchars($_POST['pswd']);
                 if(!empty($mail) && !empty($mdp)){
-                    require_once '../functions_include\connect.php';
+                    require_once '../include\connect.php';
                     $sql = "SELECT id_enseignant, nom_enseignant, email_enseignant, privilege from enseignant where email_enseignant = :mail and mdp = :mdp";
                     $stm = $con->prepare($sql);
                     $stm ->bindValue(':mail',$mail , PDO::PARAM_STR );

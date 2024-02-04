@@ -1,10 +1,16 @@
 <?php session_start() ;
- include_once "include/crud.php";
-
+ include_once "include/connexion.php";
+    include_once "classes/UE.php";
+    include_once "classes/Classe.php";
  // Exemple d'utilisation de la fonction
-$uesArray = getUes();
-$stm = $connexion->query("SELECT id_enseignant, nom_enseignant from enseignant");
-$profs = $stm->fetchAll(PDO::FETCH_ASSOC);
+    $horaire = new UE($connexion);
+    $uesArray = $horaire->read();
+
+    $horaire = new Classe($connexion);
+    $horaires = $horaire->read();
+
+    $stm = $connexion->query("SELECT id_enseignant, nom_enseignant from enseignant where nom_enseignant<>'admin'");
+    $profs = $stm->fetchAll(PDO::FETCH_ASSOC);
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -51,12 +57,12 @@ $profs = $stm->fetchAll(PDO::FETCH_ASSOC);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($uesArray as $ue): ?>
+                                    <?php foreach ($uesArray as $horaire): ?>
                                         <tr>
-                                            <td><?php echo $ue['id']; ?></td>
-                                            <td><?php echo $ue['code']; ?></td>
-                                            <td><?php echo $ue['nom_ue']; ?></td>
-                                            <td><?php echo $ue['ens']; ?></td>
+                                            <td><?php echo $horaire['id']; ?></td>
+                                            <td><?php echo $horaire['code']; ?></td>
+                                            <td><?php echo $horaire['nom_ue']; ?></td>
+                                            <td><?php echo $horaire['ens']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
@@ -80,25 +86,39 @@ $profs = $stm->fetchAll(PDO::FETCH_ASSOC);
                                 <!-- Formulaire pour saisir les informations de l'enseignant -->
                                 <form action="traitement.php" method="post">
                                     <div class="form-group">
-                                        <label for="nom">Nom de l'enseignant :</label>
+                                        <label for="nom">Nom UE :</label>
                                         <input type="text" class="form-control" id="nom" name="nom" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="code">Code :</label>
                                         <input type="text" class="form-control" id="code" name="code" required>
-                                    </div>
+                                    </div><br>
                                     <div class="form-group">
-                                        <select name="enseignant" id="">
-                                        <?php foreach ($profs as $prof): ?>
-                                            <option value=""></option>
-                                        <?php endforeach; ?>
+                                        <select name="classe" id="classe" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Classe</option>
+                                            <?php foreach ($horaires as $horaire): ?>
+                                                <option value="<?=$horaire['id_classe']?>"><?=$horaire['nom_classe']?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
-
+                                                <br>
                                     <div class="form-group">
-                                        <label for="email">Email :</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div><br>
+                                        <select name="semestre" id="semestre" class="form-select" aria-label="Default select example">
+                                            <option selected disabled>Semestre</option>
+                                            <option value="1">Semestre 1</option>
+                                            <option value="2">Semestre 2</option>
+                                        </select>
+                                    </div>
+    <br>                                                
+                                    <div class="form-group">
+                                        <select name="enseignant" id="enseignant" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Enseignant</option>
+                                            <?php foreach ($profs as $prof): ?>
+                                                <option value="<?=$prof['id_enseignant']?>"><?=$prof['nom_enseignant']?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <br>
                                     <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                                 </form>

@@ -1,10 +1,10 @@
 <?php session_start() ;
- require_once "include/connexion.php";
- require_once 'classes/Enseignant.php';
-    $ens = new Enseignant($connexion);
+ include_once "include/connexion.php";
+    include_once "classes/Salle.php";
  // Exemple d'utilisation de la fonction
-$uesArray = $ens->read();
-
+    
+    $classes = new Salle($connexion);
+    $horaires = $classes->read();
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -30,13 +30,13 @@ $uesArray = $ens->read();
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Liste des enseignants</li>
+                            <li class="breadcrumb-item active">Liste des Salles</li>
                         </ol>
                        
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Enseignant <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalEnseignant">Ajouter un enseignant</button>
+                               <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalEnseignant">Ajouter une Salles</button>
                             </div>
                        
                             <div class="card-body">
@@ -44,17 +44,17 @@ $uesArray = $ens->read();
                                     <thead>
                                         <tr> 
                                             <th>id</th>
-                                            <th>Nom</th>
-                                            <th>email</th>
-                                            <th>action</th>
+                                            <th>nom</th>
+                                            <th>Capacité</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($uesArray as $horaire): ?>
+                                    <?php foreach ($horaires as $horaire): ?>
                                         <tr>
-                                            <td><?php echo $horaire['id']; ?></td>
-                                            <td><?php echo $horaire['nom']; ?></td>
-                                            <td><?php echo $horaire['email']; ?></td>
+                                            <td><?php  echo $horaire['id_salle']; ?></td>
+                                            <td><?php echo $horaire['nom_salle']; ?></td>
+                                            <td><?php echo $horaire['capacite_salle']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
@@ -78,13 +78,14 @@ $uesArray = $ens->read();
                                 <!-- Formulaire pour saisir les informations de l'enseignant -->
                                 <form action="traitement.php" method="post">
                                     <div class="form-group">
-                                        <label for="nom">Nom de l'enseignant :</label>
+                                        <label for="nom">Nom Salle :</label>
                                         <input type="text" class="form-control" id="nom" name="nom" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Email :</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div><br>
+                                        <label for="capaite">Capacité :</label>
+                                        <input type="text" class="form-control" id="capaite" name="capaite" required>
+                                    </div>
+                                    <br>
                                     <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                                 </form>

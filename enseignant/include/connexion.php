@@ -8,7 +8,7 @@ try {
     $connexion = new PDO("mysql:host=$serveur;dbname=$base_de_donnees", $utilisateur, $mot_de_passe);
     // Configure le mode d'erreur pour les exceptions
     $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connexion réussie !";
+   
 } catch (PDOException $e) {
     echo "Erreur de connexion : " . $e->getMessage();
 }

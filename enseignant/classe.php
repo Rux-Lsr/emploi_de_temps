@@ -1,10 +1,13 @@
 <?php session_start() ;
- require_once "include/connexion.php";
- require_once 'classes/Enseignant.php';
-    $ens = new Enseignant($connexion);
+ include_once "include/connexion.php";
+    include_once "classes/Departement.php";
+    include_once "classes/Classe.php";
  // Exemple d'utilisation de la fonction
-$uesArray = $ens->read();
+    $horaire = new Departement($connexion);
+    $departements = $horaire->read();
 
+    $horaire = new Classe($connexion);
+    $horaires = $horaire->read();
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -30,13 +33,13 @@ $uesArray = $ens->read();
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Liste des enseignants</li>
+                            <li class="breadcrumb-item active">Liste des UEs</li>
                         </ol>
                        
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Enseignant <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalEnseignant">Ajouter un enseignant</button>
+                                 <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalEnseignant">Ajouter une classe</button>
                             </div>
                        
                             <div class="card-body">
@@ -44,17 +47,19 @@ $uesArray = $ens->read();
                                     <thead>
                                         <tr> 
                                             <th>id</th>
-                                            <th>Nom</th>
-                                            <th>email</th>
+                                            <th>nom</th>
+                                            <th>code</th>
+                                            <th>Effectif</th>
                                             <th>action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($uesArray as $horaire): ?>
+                                    <?php foreach ($horaires as $horaire): ?>
                                         <tr>
-                                            <td><?php echo $horaire['id']; ?></td>
-                                            <td><?php echo $horaire['nom']; ?></td>
-                                            <td><?php echo $horaire['email']; ?></td>
+                                            <td><?php echo $horaire['id_classe']; ?></td>
+                                            <td><?php echo $horaire['code_classe']; ?></td>
+                                            <td><?php echo $horaire['nom_classe']; ?></td>
+                                            <td><?php echo $horaire['effectif_classe']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
@@ -78,13 +83,25 @@ $uesArray = $ens->read();
                                 <!-- Formulaire pour saisir les informations de l'enseignant -->
                                 <form action="traitement.php" method="post">
                                     <div class="form-group">
-                                        <label for="nom">Nom de l'enseignant :</label>
+                                        <label for="nom">Nom classe :</label>
                                         <input type="text" class="form-control" id="nom" name="nom" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Email :</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <label for="code">Code :</label>
+                                        <input type="text" class="form-control" id="code" name="code" required>
                                     </div><br>
+                                    <div class="form-group">
+                                        <label for="code">Effectif :</label>
+                                        <input type="text" class="form-control" id="code" name="code" required>
+                                    </div><br>
+                                    <div class="form-group">
+                                        <select name="classe" id="classe" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Departement</option>
+                                            <?php foreach ($departements as $horaire): ?>
+                                                <option value="<?=$horaire['id_departement']?>"><?=$horaire['nom_departement']?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div><br> 
                                     <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                                 </form>
