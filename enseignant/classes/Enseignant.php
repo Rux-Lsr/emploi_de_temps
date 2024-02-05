@@ -20,7 +20,10 @@ class Enseignant {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function readParam($mail, $mdp) {
-        $sql = "SELECT * from enseignant where email_enseignant = :mail and mdp_enseignant = :mdp";
+        $sql = "SELECT enseignant.id_enseignant, email_enseignant, nom_enseignant,nom_ue, id_departement 
+        from enseignant
+        join ue on ue.id_enseignant = enseignant.id_enseignant
+        JOIN classe on classe.id_classe = ue.id_classe where email_enseignant = :mail and mdp_enseignant = :mdp";
         $stm = $this->pdo->prepare($sql);
         $stm ->bindValue(':mail',$mail , PDO::PARAM_STR );
         $stm ->bindValue(':mdp' ,$mdp);
