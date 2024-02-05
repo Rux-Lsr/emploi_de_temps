@@ -1,21 +1,11 @@
 <?php
-// Connexion à la base de données
-$dbh = new PDO('mysql:host=localhost;dbname=time_sc', 'root', '');
-
-// Requête SQL pour récupérer les horaires
-$sql = "SELECT jour_horaire, heure_debut_horaire, heure_fin_horaire, nom_ue, nom_enseignant, nom_salle 
-        FROM horaire 
-        JOIN ue ON horaire.id_ue = ue.id_ue 
-        JOIN enseignant ON ue.id_enseignant = enseignant.id_enseignant 
-        JOIN salle ON horaire.id_salle = salle.id_salle 
-        WHERE semestre = :semestre AND id_classe = :id_classe 
-        ORDER BY jour_horaire, heure_debut_horaire";
-
-// Préparation de la requête
-$stmt = $dbh->prepare($sql); // Exécution de la requête avec les paramètressouhaités 
-$stmt->execute(['semestre' => 1, 'id_classe' => 1]);
-// Récupération des résultats 
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC); ?>
+    // Connexion à la base de données
+    include_once("include/connexion.php");
+    include_once("classes/Classe.php");
+    include_once("classes/Horaire.php");
+    $hors = new Horaire($connexion);
+    $result = $hors->read_horaire_ue_salle(1);
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -43,14 +33,9 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC); ?>
       <label for="groupe">Groupe:</label>
       <select class="form-control" id="groupe" name="groupe">
         <?php
-        // Requête SQL pour récupérer les groupes
-        $sql = "SELECT id_classe, nom_classe FROM classe";
-        // Préparation de la requête
-        $stmt = $dbh->prepare($sql);
-        // Exécution de la requête
-        $stmt->execute();
-        // Récupération des résultats
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $class = new Classe($connexion);
+        
+        $res = $class->readParam(1);
         // Génération des options de la liste déroulante
         foreach ($res as $row) {
           echo '<option value="' . htmlspecialchars($row['id_classe']) . '">' . htmlspecialchars($row['nom_classe']) . '</option>';
