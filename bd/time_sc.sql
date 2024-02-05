@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 04 fév. 2024 à 22:02
+-- Généré le : lun. 05 fév. 2024 à 01:25
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -79,7 +79,7 @@ CREATE TABLE `enseignant` (
   `id_enseignant` bigint(20) NOT NULL,
   `email_enseignant` varchar(50) DEFAULT NULL,
   `nom_enseignant` varchar(50) DEFAULT NULL,
-  `mdp_enseignant` varchar(50) DEFAULT NULL,
+  `mdp_enseignant` varchar(50) DEFAULT '0000',
   `priv` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -89,7 +89,7 @@ CREATE TABLE `enseignant` (
 
 INSERT INTO `enseignant` (`id_enseignant`, `email_enseignant`, `nom_enseignant`, `mdp_enseignant`, `priv`) VALUES
 (1, 'admin@gmail.com', 'admin', 'admin2.0', 1),
-(2, 'prof1@email.com', 'Professeur 1', NULL, 0),
+(2, 'prof1@email.com', 'Professeur 1', '0000', 0),
 (3, 'prof2@email.com', 'Professeur 2', NULL, 0),
 (4, 'prof3@email.com', 'Professeur 3', NULL, 0),
 (5, 'prof4@email.com', 'Professeur 4', NULL, 0),
