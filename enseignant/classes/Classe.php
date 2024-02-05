@@ -19,6 +19,11 @@ class Classe {
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function readParam($depart) {
+        $sql = "SELECT * FROM classe where id_departement=".$depart;
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Update
     public function update($id, $nom, $code, $effectif, $annee_academique, $id_departement) {
