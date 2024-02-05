@@ -33,6 +33,42 @@
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$id]);
         }
+
+        public function read_horaire_ue_salleParam($semestre, $salle) {
+            // Requête SQL pour récupérer les horaires
+            $sql = "SELECT jour_horaire, heure_debut_horaire, heure_fin_horaire, nom_ue, nom_enseignant, nom_salle
+            FROM horaire 
+            JOIN ue ON horaire.id_ue = ue.id_ue 
+            JOIN enseignant ON ue.id_enseignant = enseignant.id_enseignant 
+            JOIN salle ON horaire.id_salle = salle.id_salle 
+            WHERE semestre = :semestre AND id_classe = :id_classe 
+            ORDER BY jour_horaire, heure_debut_horaire";
+
+            // Préparation de la requête
+            $stmt = $this->pdo->prepare($sql); // Exécution de la requête avec les paramètressouhaités 
+            $stmt->execute(['semestre' => $semestre, 'id_classe' => $salle]);
+            // Récupération des résultats 
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+            return $result;
+        }
+
+        public function read_horaire_ue_salle($id_depart) {
+            // Requête SQL pour récupérer les horaires
+            $sql = "SELECT jour_horaire, heure_debut_horaire, heure_fin_horaire, nom_ue, nom_enseignant, nom_salle 
+            FROM horaire 
+            JOIN ue ON horaire.id_ue = ue.id_ue 
+            join classe on classe.id_classe = ue.id_classe
+            JOIN enseignant ON ue.id_enseignant = enseignant.id_enseignant 
+            JOIN salle ON horaire.id_salle = salle.id_salle
+            where id_departement =".$id_depart." ORDER BY jour_horaire, heure_debut_horaire";
+
+            // Préparation de la requête
+            $stmt = $this->pdo->prepare($sql); // Exécution de la requête avec les paramètressouhaités 
+            $stmt->execute();
+            // Récupération des résultats 
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+            return $result;
+        }
     }
     
    
