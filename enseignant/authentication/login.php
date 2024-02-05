@@ -40,11 +40,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="../../etudiant/authentication/login.php">Etudiant <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#"></a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="enseignant/authentication/login.php">Enseignant</a>
-                    </li> -->
                 </ul>
             </div>
         </nav>
@@ -54,15 +51,10 @@
                 $mail = htmlspecialchars( $_POST['mail']);
                 $mdp = htmlspecialchars($_POST['pswd']);
                 if(!empty($mail) && !empty($mdp)){
-                    require_once '../include\connect.php';
-                    $sql = "SELECT id_enseignant, nom_enseignant, email_enseignant, privilege from enseignant where email_enseignant = :mail and mdp = :mdp";
-                    $stm = $con->prepare($sql);
-                    $stm ->bindValue(':mail',$mail , PDO::PARAM_STR );
-                    $stm ->bindValue(':mdp' ,$mdp);
-                    $stm->execute();
-                    
-                    
-                    $result = $stm->fetch(PDO::FETCH_ASSOC);
+                    require_once '../include\connexion.php';
+                    require_once '../classes\Enseignant.php';
+                    $ens = new Enseignant($connexion);
+                    $result = $ens->readParam($mail, $mdp);
                    if($result){
                     $_SESSION["user"] = $result;
                     header("Location:../index.php");
@@ -86,19 +78,17 @@
                                     <div class="card-body">
                                         <form action="" method="post">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" required name="mail"/>
+                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="mail"/>
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" required name="pswd"/>
+                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" name="pswd"/>
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-check mb-3">
-                                                <!-- <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" /> -->
-                                                <!--<label class="form-check-label" for="inputRememberPassword">Remember Password</label>!-->
+                                                
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <!-- <a class="small" href="password.php">Forgot Password?</a> -->
                                                 <button class="btn btn-primary" name="submit" type="submit">Connexion</button>
                                             </div>
                                         </form>

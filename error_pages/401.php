@@ -32,7 +32,7 @@
                 </main>
             </div>
             <div id="layoutError_footer">
-            <?php include_once "../etudiant/templates/footer.php";?>
+            <?php include_once "../enseignant/templates/footer.php";?>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

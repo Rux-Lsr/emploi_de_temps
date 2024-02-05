@@ -19,6 +19,14 @@ class Enseignant {
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function readParam($mail, $mdp) {
+        $sql = "SELECT * from enseignant where email_enseignant = :mail and mdp_enseignant = :mdp";
+        $stm = $this->pdo->prepare($sql);
+        $stm ->bindValue(':mail',$mail , PDO::PARAM_STR );
+        $stm ->bindValue(':mdp' ,$mdp);
+        $stm->execute();
+        return $stm->fetch(PDO::FETCH_ASSOC);
+    }
 
     // Update
     public function update($id, $email, $nom) {

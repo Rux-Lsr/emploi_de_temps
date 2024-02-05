@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,15 +48,13 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <a class="navbar-brand" href="index.php">Gestion de requette</a>
+        <a class="navbar-brand" href="index.php">Gestion des emplois de temps</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="etudiant/authentication/login.php">Etudiant <span class="sr-only">(current)</span></a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="enseignant/authentication/login.php">Enseignant</a>
                 </li>
@@ -72,9 +71,6 @@
             <div class="col text-center">
                 <!-- Modification du style des boutons -->
                 <a href="enseignant/authentication/login.php" class="confirm-button">Enseignant</a>
-            </div>
-            <div class="col text-center">
-                <a href="etudiant/authentication/login.php" class="confirm-button">Etudiant</a>
             </div>
         </div>
     </div>

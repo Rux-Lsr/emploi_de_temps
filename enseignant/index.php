@@ -1,4 +1,7 @@
 <?php session_start() ;
+    
+    if(!isset($_SESSION['user']) || empty($_SESSION['user']))
+        header('Location: ..\error_pages\401.php');
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -49,12 +52,12 @@
                                     </thead>
                                     <tbody>
                                     <tr> 
-                                            <th>7:30-9h30</th>
-                                            <th>ICT201</th>
-                                            <th>ICT201</th>
-                                            <th>ICT201</th>
-                                            <th>ICT201</th>
-                                            <th>ICT201</th>
+                                            <th>heure_debut-heurefin</th>
+                                            <th>code_matiere nom_enseignant salle</th>
+                                            <th>code_matiere nom_enseignant salle</th>
+                                            <th>code_matiere nom_enseignant salle</th>
+                                            <th>code_matiere nom_enseignant salle</th>
+                                            <th>code_matiere nom_enseignant salle</th>
                                         </tr>
 
                                     </tbody>
