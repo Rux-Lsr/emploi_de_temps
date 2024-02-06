@@ -15,12 +15,12 @@ class Enseignant {
 
     // Read
     public function read() {
-        $sql = "SELECT e.id_enseignant as id, e.nom_enseignant as nom, e.email_enseignant as email FROM enseignant e";
+        $sql = "SELECT e.id_enseignant as id, e.nom_enseignant as nom, e.email_enseignant as email, priv FROM enseignant e";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function readParam($mail, $mdp) {
-        $sql = "SELECT enseignant.id_enseignant, email_enseignant, nom_enseignant,nom_ue, id_departement 
+        $sql = "SELECT enseignant.id_enseignant, email_enseignant, nom_enseignant,nom_ue, id_departement, priv 
         from enseignant
         join ue on ue.id_enseignant = enseignant.id_enseignant
         JOIN classe on classe.id_classe = ue.id_classe where email_enseignant = :mail and mdp_enseignant = :mdp";
