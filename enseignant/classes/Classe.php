@@ -8,34 +8,47 @@ class Classe {
 
     // Create
     public function create($nom, $code, $effectif, $annee_academique, $id_departement) {
-        $sql = "INSERT INTO classe (nom_classe, code_classe, effectif_classe, annee_academique, id_departement) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom, $code, $effectif, $annee_academique, $id_departement]);
+        $stmt = $this->pdo->prepare("CALL InsertIntoClasse(?, ?, ?, ?, ?)");
+        $stmt->bindParam(1, $nom, PDO::PARAM_STR);
+        $stmt->bindParam(2, $code, PDO::PARAM_STR);
+        $stmt->bindParam(3, $effectif, PDO::PARAM_INT);
+        $stmt->bindParam(4, $annee_academique, PDO::PARAM_STR);
+        $stmt->bindParam(5, $id_departement, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 
     // Read
     public function read() {
-        $sql = "SELECT * FROM classe";
+        $sql = "SELECT * FROM vue_classe";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function readParam($depart) {
-        $sql = "SELECT * FROM classe where id_departement=".$depart;
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->pdo->prepare("CALL SelectClasseDepartement(?)");
+        $stmt->bindParam(1, $depart, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Update
     public function update($id, $nom, $code, $effectif, $annee_academique, $id_departement) {
-        $sql = "UPDATE classe SET nom_classe = ?, code_classe = ?, effectif_classe = ?, annee_academique = ?, id_departement = ? WHERE id_classe = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom, $code, $effectif, $annee_academique, $id_departement, $id]);
+        $stmt = $this->pdo->prepare("CALL UpdateClasse(?, ?, ?, ?, ?, ?)");
+        $stmt->bindParam(1, $nom, PDO::PARAM_STR);
+        $stmt->bindParam(2, $code, PDO::PARAM_STR);
+        $stmt->bindParam(3, $effectif, PDO::PARAM_INT);
+        $stmt->bindParam(4, $annee_academique, PDO::PARAM_STR);
+        $stmt->bindParam(5, $id_departement, PDO::PARAM_INT);
+        $stmt->bindParam(6, $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 
     // Delete
     public function delete($id) {
-        $sql = "DELETE FROM classe WHERE id_classe = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("CALL DeleteFromClasse(?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 }
