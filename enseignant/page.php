@@ -22,29 +22,29 @@
     <div class="container">
       <h2>Emploi du temps</h2>
       <form action="" method="post">
-    <div class="form-group">
-      <label for="semestre">Semestre:</label>
-      <select class="form-control" id="semestre" name="semestre">
-        <option value="1">1</option>
-        <option value="2">2</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="groupe">Groupe:</label>
-      <select class="form-control" id="groupe" name="groupe">
-        <?php
-        $class = new Classe($connexion);
-        
-        $res = $class->readParam(1);
-        // Génération des options de la liste déroulante
-        foreach ($res as $row) {
-          echo '<option value="' . htmlspecialchars($row['id_classe']) . '">' . htmlspecialchars($row['nom_classe']) . '</option>';
-        }
-        ?>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Afficher l'emploi du temps</button>
-  </form>
+        <div class="form-group">
+          <label for="semestre">Semestre:</label>
+          <select class="form-control" id="semestre" name="semestre">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="groupe">Groupe:</label>
+          <select class="form-control" id="groupe" name="groupe">
+            <?php
+            $class = new Classe($connexion);
+            
+            $res = $class->readParam(1);
+            // Génération des options de la liste déroulante
+            foreach ($res as $row) {
+              echo '<option value="' . htmlspecialchars($row['id_classe']) . '">' . htmlspecialchars($row['nom_classe']) . '</option>';
+            }
+            ?>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Afficher l'emploi du temps</button>
+      </form>
       <table class="table table-striped">
         <thead>
           <tr>
