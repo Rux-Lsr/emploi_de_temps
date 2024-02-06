@@ -8,31 +8,35 @@ class Departement {
 
     // Create
     public function create($nom) {
-        $sql = "INSERT INTO departement (nom_departement) VALUES (?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom]);
+        $stmt = $this->pdo->prepare("CALL InsertIntoDepartement(?)");
+        $stmt->bindParam(1, $nom, PDO::PARAM_STR);
+        $stmt->execute();
     }
+    
 
     // Read
     public function read() {
-        $sql = "SELECT * FROM departement";
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->pdo->query("SELECT * FROM ViewDepartement");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     // Update
     public function update($id, $nom) {
-        $sql = "UPDATE departement SET nom_departement = ? WHERE id_departement = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom, $id]);
+        $stmt = $this->pdo->prepare("CALL UpdateDepartement(?, ?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->bindParam(2, $nom, PDO::PARAM_STR);
+        $stmt->execute();
     }
+    
 
     // Delete
     public function delete($id) {
-        $sql = "DELETE FROM departement WHERE id_departement = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("CALL DeleteFromDepartement(?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 }
 
 // Similar classes can be created for the other tables: Horaire, Salle, Classe

@@ -8,41 +8,44 @@ class Enseignant {
 
     // Create
     public function create($email, $nom) {
-        $sql = "INSERT INTO enseignant (email_enseignant, nom_enseignant) VALUES (?, ?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$email, $nom]);
+        $stmt = $this->pdo->prepare("CALL InsertIntoEnseignant(?, ?)");
+        $stmt->bindParam(1, $email, PDO::PARAM_STR);
+        $stmt->bindParam(2, $nom, PDO::PARAM_STR);
+        $stmt->execute();
     }
+    
 
     // Read
     public function read() {
-        $sql = "SELECT e.id_enseignant as id, e.nom_enseignant as nom, e.email_enseignant as email, priv FROM enseignant e";
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->pdo->query("SELECT * FROM ViewEnseignant");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     public function readParam($mail, $mdp) {
-        $sql = "SELECT enseignant.id_enseignant, email_enseignant, nom_enseignant,nom_ue, id_departement, priv 
-        from enseignant
-        join ue on ue.id_enseignant = enseignant.id_enseignant
-        JOIN classe on classe.id_classe = ue.id_classe where email_enseignant = :mail and mdp_enseignant = :mdp";
-        $stm = $this->pdo->prepare($sql);
-        $stm ->bindValue(':mail',$mail , PDO::PARAM_STR );
-        $stm ->bindValue(':mdp' ,$mdp);
-        $stm->execute();
-        return $stm->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("CALL ReadParamEnseignant(?, ?)");
+        $stmt->bindParam(1, $mail, PDO::PARAM_STR);
+        $stmt->bindParam(2, $mdp, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     // Update
     public function update($id, $email, $nom) {
-        $sql = "UPDATE enseignant SET email_enseignant = ?, nom_enseignant = ? WHERE id_enseignant = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$email, $nom, $id]);
+        $stmt = $this->pdo->prepare("CALL UpdateEnseignant(?, ?, ?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->bindParam(2, $email, PDO::PARAM_STR);
+        $stmt->bindParam(3, $nom, PDO::PARAM_STR);
+        $stmt->execute();
     }
+    
 
     // Delete
     public function delete($id) {
-        $sql = "DELETE FROM enseignant WHERE id_enseignant = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("CALL DeleteFromEnseignant(?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 }
 ?>
