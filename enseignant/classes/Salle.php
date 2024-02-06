@@ -8,30 +8,36 @@ class Salle {
 
     // Create
     public function create($nom, $capacite) {
-        $sql = "INSERT INTO salle (nom_salle, capacite_salle) VALUES (?, ?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom, $capacite]);
+        $stmt = $this->pdo->prepare("CALL InsertIntoSalle(?, ?)");
+        $stmt->bindParam(1, $nom, PDO::PARAM_STR);
+        $stmt->bindParam(2, $capacite, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 
     // Read
     public function read() {
-        $sql = "SELECT * FROM salle";
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->pdo->query("SELECT * FROM ViewSalle");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     // Update
     public function update($id, $nom, $capacite) {
-        $sql = "UPDATE salle SET nom_salle = ?, capacite_salle = ? WHERE id_salle = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nom, $capacite, $id]);
+        $stmt = $this->pdo->prepare("CALL UpdateSalle(?, ?, ?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->bindParam(2, $nom, PDO::PARAM_STR);
+        $stmt->bindParam(3, $capacite, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 
     // Delete
     public function delete($id) {
-        $sql = "DELETE FROM salle WHERE id_salle = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("CALL DeleteFromSalle(?)");
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
+    
 }
 
