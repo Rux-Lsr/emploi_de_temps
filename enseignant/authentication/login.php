@@ -57,7 +57,11 @@
                     $result = $ens->readParam($mail, $mdp);
                    if($result){
                     $_SESSION["user"] = $result;
-                    header("Location:../index.php");
+                    if( $_SESSION["user"]["priv"] == 0)
+                        header("Location:../index.php");
+                    else 
+                    header("Location:../hor.php");
+
                    }else 
         ?>
             <div class="alert alert-warning mx-0 mt-0"><?php echo $msg ?></div>

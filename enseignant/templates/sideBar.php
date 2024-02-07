@@ -17,17 +17,20 @@
                 <?php if($_SESSION["user"]["priv"] == 1): ?>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    Administrateur
+                    Administration
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>  
+                    
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInsertion" aria-expanded="false" aria-controls="collapseInsertion">
                                 Gestion
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
+                           
                             <div class="collapse" id="collapseInsertion" aria-labelledby="headingOne" data-bs-parent="#collapseLayouts">
                                 <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="hor.php">Horaire</a>
                                     <a class="nav-link" href="prof.php">Enseignant</a>
                                     <a class="nav-link" href="ue.php">UE</a>
                                     <a class="nav-link" href="salle.php">Salle</a>

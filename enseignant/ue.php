@@ -63,7 +63,7 @@
                                             <td><?php echo $horaire['code']; ?></td>
                                             <td><?php echo $horaire['nom_ue']; ?></td>
                                             <td><?php echo $horaire['ens']; ?></td>
-                                            <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
+                                            <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2"  href="modifier.php?id=<?=$horaire["id"]?>">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
 
@@ -131,6 +131,14 @@
             </div>
            
         </div>
+        <script>
+            function getInfo(e, id){
+                e.preventDefault();
+                var xhr = new XMLHttpRequest();
+                xhr.open('post', 'traitement.php', true);
+                xhr.onload
+            }
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

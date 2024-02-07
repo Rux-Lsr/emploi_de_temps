@@ -25,7 +25,7 @@ class UE {
     
 
     // Update
-    public function update($id, $code, $nom, $id_enseignant, $semestre) {
+    public function update($id, $code, $nom, $id_enseignant, $semestre = 1) {
         $stmt = $this->pdo->prepare("CALL UpdateUe(?, ?, ?, ?, ?)");
         $stmt->bindParam(1, $id, PDO::PARAM_INT);
         $stmt->bindParam(2, $code, PDO::PARAM_STR);
