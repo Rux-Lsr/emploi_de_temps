@@ -2,15 +2,17 @@
     <nav class="sb-sidenav accordion sb-sidenav-lg navbar-fixed bg-light "  id="sidenavAccordion" style="box-shadow: 10px 0px 10px 0px rgba(0,0,0,0.1);">
         <div class="sb-sidenav-menu" >
             <div class="nav">
-                <div class="sb-sidenav-menu-heading">Outils</div>
-                <a class="nav-link" href="index.php">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    emploi de temps
-                </a>
-                <a class="nav-link" href="">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    options
-                </a>
+                <?php if($_SESSION['user']['priv'] == 0) : ?>
+                    <div class="sb-sidenav-menu-heading">Outils</div>
+                    <a class="nav-link" href="index.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Consulter emplois de temps
+                    </a>
+                    <a class="nav-link" href="">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Mon emploi de temps
+                    </a>
+                <?php endif; ?>
                 
                 <?php if($_SESSION["user"]["priv"] == 1): ?>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
