@@ -3,8 +3,8 @@
     include_once "classes/Horaire.php";
  // Exemple d'utilisation de la fonction
     
-    $horaire = new Horaire($connexion);
-    $horaires = $horaire->read();
+    $sall = new Horaire($connexion);
+    $sal = $sall->read();
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -51,10 +51,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($horaires as $horaire): ?>
+                                    <?php foreach ($sal as $sall): ?>
                                         <tr>
-                                            <td><?php  echo $horaire['heure_debut_horaire']."-".$horaire['heure_fin_horaire']; ?></td>
-                                            <td><?php echo $horaire['nom_departement']; ?></td>
+                                            <td><?php  echo $sall['heure_debut_horaire']."-".$sall['heure_fin_horaire']; ?></td>
+                                            <td><?php echo $sall['nom_departement']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>

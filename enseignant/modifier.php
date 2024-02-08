@@ -1,24 +1,22 @@
-<?php session_start() ;
- include_once "include/connexion.php";
-    include_once "classes/UE.php";
-    include_once "classes/Classe.php";
-    include_once "classes/Enseignant.php";
- // Exemple d'utilisation de la fonction
-    $enss = new Enseignant($connexion);
-    $enssArray = $enss->read();
+<?php 
+session_start();
+    require_once "include/connexion.php";
+    $sal  = $connexion->query("SELECT * FROM horaire order by id asc", PDO::FETCH_ASSOC);
+    $jours = $connexion->query("SELECT * FROM jour order by id asc", PDO::FETCH_ASSOC);
+    $desideratas  = $connexion->query("SELECT j.nom as jour, h.heuredebut, h.heurefin FROM desiderata join jour j on j.id = jour_id join horaire h on h.id=horaire_id join enseignant on enseignant.id= enseignantid where enseignantid = {$_SESSION["user"]["id"]} order by jour  asc", PDO::FETCH_ASSOC);
+    $stmt = null;
 
-    $horaire = new Classe($connexion);
-    $horaires = $horaire->read();
+    if(isset($_POST["sub"])){
+        $stmt = $connexion->prepare("UPDATE desiderata set jour_id={$_POST["jour"]}, horaire_id={$_POST["horaire"]} where id={$_GET["id"]}");
+        $stmt->execute();
+        echo"<script>alert('Desirata modifie avec success')</script>";
+    }else
+        echo"<script>alert('Echec de modification du  Desirata')</script>";
 
-    $stm = $connexion->query("SELECT nom_ue, code_ue, nom_enseignant from ue join enseignant on enseignant.id_enseignant = ue.id_enseignant where id_ue=".$_GET['id']);
-    $profs = $stm->fetch(PDO::FETCH_ASSOC);
+   
 
-    if(isset($_POST['submit']))
-    {
-        $ue = new UE($connexion);
-        $ue->update($_GET["id"], $_POST['code'], $_POST['nom'],$_POST['enseignant'], $_POST['submit']);
-    }
-    ?>
+?>  
+ 
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -36,44 +34,38 @@
     <body class="sb-nav-fixed">
         <?php include_once "templates/fixedNavBar.php";?>
         <div id="layoutSidenav">
-            <!-- ; -->
             <div id="layoutSidenav_content">
             <?php include_once "templates/sideBar.php" ?>
                 <main>
-                            <div class="Container">
-                                <h3>Modifier UE</h3>
-                                <form action="" method="post">
-                                    <div class="form-group">
-                                        <label for="nom">Nom UE :</label>
-                                        <input type="text" class="form-control" id="nom" name="nom" required value="<?=$profs['nom_ue']?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="code">Code :</label>
-                                        <input type="text" class="form-control" id="code" name="code" required value="<?=$profs['code_ue']?>">
-                                    </div><br>                                                
-                                    <div class="form-group">
-                                        <select name="enseignant" id="enseignant" class="form-select" aria-label="Default select example">
-                                        <option selected disabled>Enseignant</option>
-                                            <?php foreach ($enssArray as $prof): ?>
-                                                <option value="<?=$prof['id']?>"><?=$prof['nom']?></option>
-                                            <?php endforeach;  var_dump($enssArray)?>
-                                        </select>
-                                    </div>
-                                    <br>
-                                    <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
-                                    <button type="submit" class="btn btn-primary" name="submit">Enregistrer</button>
-                                </form>
-                            </div>
+                    
+                <div class="container">
+                    <h2>Formulaire de Désidérata</h2>
+                    <form action="" method="post">
+                    <div class="form-group">
+                        <label for="jour">Jour:</label>
+                        <select class="form-control" id="jour" name="jour">
+                            <?php foreach($jours as $sall):?>
+                                <option value="<?=$sall["id"]?>"><?=$sall["nom"]?></option>
+                                <?php endforeach;  ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaire">Plage horaire:</label>
+                        <select class="form-control" id="horaire" name="horaire">
+                        <?php foreach($sal as $horaire):?>
+                                <option value="<?=$horaire["id"]?>"><?=$horaire["heuredebut"]?>-<?=$horaire["heurefin"]?></option>
+                                <?php endforeach;  ?>
+                        </select>
+                    </div><br>
+                        <button type="submit" class="btn btn-primary" name="sub">Modifier</button>
+                    </form>
+                </div>  
+                
                 </main>
-               
             </div>
-           
         </div>
-       
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     
     </body>
 </html>

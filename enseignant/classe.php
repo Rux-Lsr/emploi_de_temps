@@ -3,11 +3,11 @@
     include_once "classes/Departement.php";
     include_once "classes/Classe.php";
  // Exemple d'utilisation de la fonction
-    $horaire = new Departement($connexion);
-    $departements = $horaire->read();
+    $sall = new Departement($connexion);
+    $departements = $sall->read();
 
-    $horaire = new Classe($connexion);
-    $horaires = $horaire->read();
+    $sall = new Classe($connexion);
+    $sal = $sall->read();
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -54,12 +54,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($horaires as $horaire): ?>
+                                    <?php foreach ($sal as $sall): ?>
                                         <tr>
-                                            <td><?php echo $horaire['id_classe']; ?></td>
-                                            <td><?php echo $horaire['code_classe']; ?></td>
-                                            <td><?php echo $horaire['nom_classe']; ?></td>
-                                            <td><?php echo $horaire['effectif_classe']; ?></td>
+                                            <td><?php echo $sall['id_classe']; ?></td>
+                                            <td><?php echo $sall['code_classe']; ?></td>
+                                            <td><?php echo $sall['nom_classe']; ?></td>
+                                            <td><?php echo $sall['effectif_classe']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
@@ -97,8 +97,8 @@
                                     <div class="form-group">
                                         <select name="classe" id="classe" class="form-select" aria-label="Default select example">
                                         <option selected disabled>Departement</option>
-                                            <?php foreach ($departements as $horaire): ?>
-                                                <option value="<?=$horaire['id_departement']?>"><?=$horaire['nom_departement']?></option>
+                                            <?php foreach ($departements as $sall): ?>
+                                                <option value="<?=$sall['id_departement']?>"><?=$sall['nom_departement']?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div><br> 

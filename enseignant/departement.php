@@ -3,8 +3,8 @@
     include_once "classes/Departement.php";
  // Exemple d'utilisation de la fonction
     
-    $classes = new Departement($connexion);
-    $horaires = $classes->read();
+    $salles = new Departement($connexion);
+    $sal = $salles->read();
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -49,10 +49,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($horaires as $horaire): ?>
+                                    <?php foreach ($sal as $sall): ?>
                                         <tr>
-                                            <td><?php  echo $horaire['id_departement']; ?></td>
-                                            <td><?php echo $horaire['nom_departement']; ?></td>
+                                            <td><?php  echo $sall['id_departement']; ?></td>
+                                            <td><?php echo $sall['nom_departement']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>

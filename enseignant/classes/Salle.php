@@ -8,7 +8,7 @@ class Salle {
 
     // Create
     public function create($nom, $capacite) {
-        $stmt = $this->pdo->prepare("CALL InsertIntoSalle(?, ?)");
+        $stmt = $this->pdo->prepare("INSERT into salle(nom, capacite) value(?, ?)");
         $stmt->bindParam(1, $nom, PDO::PARAM_STR);
         $stmt->bindParam(2, $capacite, PDO::PARAM_INT);
         $stmt->execute();
@@ -17,7 +17,7 @@ class Salle {
 
     // Read
     public function read() {
-        $stmt = $this->pdo->query("SELECT * FROM ViewSalle");
+        $stmt = $this->pdo->query("SELECT * FROM salle");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     

@@ -50,11 +50,11 @@ $uesArray = $ens->read();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($uesArray as $horaire): ?>
+                                    <?php foreach ($uesArray as $sall): ?>
                                         <tr>
-                                            <td><?php echo $horaire['id']; ?></td>
-                                            <td><?php echo $horaire['nom']; ?></td>
-                                            <td><?php echo $horaire['email']; ?></td>
+                                            <td><?php echo $sall['id']; ?></td>
+                                            <td><?php echo $sall['nom']; ?></td>
+                                            <td><?php echo $sall['email']; ?></td>
                                             <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>

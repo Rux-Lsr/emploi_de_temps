@@ -2,7 +2,7 @@
 $serveur = "localhost"; // Remplacez par l'adresse de votre serveur MySQL
 $utilisateur = "root"; // Remplacez par votre nom d'utilisateur MySQL
 $mot_de_passe = ""; // Remplacez par votre mot de passe MySQL
-$base_de_donnees = "time_sc"; // Remplacez par le nom de votre base de données
+$base_de_donnees = "planningu"; // Remplacez par le nom de votre base de données
 
 try {
     $connexion = new PDO("mysql:host=$serveur;dbname=$base_de_donnees", $utilisateur, $mot_de_passe);

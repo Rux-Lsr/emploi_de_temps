@@ -3,11 +3,11 @@
     include_once "classes/UE.php";
     include_once "classes/Classe.php";
  // Exemple d'utilisation de la fonction
-    $horaire = new UE($connexion);
-    $uesArray = $horaire->read();
+    $sall = new UE($connexion);
+    $uesArray = $sall->read();
 
-    $horaire = new Classe($connexion);
-    $horaires = $horaire->read();
+    $sall = new Classe($connexion);
+    $sal = $sall->read();
 
     $stm = $connexion->query("SELECT id_enseignant, nom_enseignant from enseignant where nom_enseignant<>'admin'");
     $profs = $stm->fetchAll(PDO::FETCH_ASSOC);
@@ -57,13 +57,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($uesArray as $horaire): ?>
+                                    <?php foreach ($uesArray as $sall): ?>
                                         <tr>
-                                            <td><?php echo $horaire['id']; ?></td>
-                                            <td><?php echo $horaire['code']; ?></td>
-                                            <td><?php echo $horaire['nom_ue']; ?></td>
-                                            <td><?php echo $horaire['ens']; ?></td>
-                                            <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2"  href="modifier.php?id=<?=$horaire["id"]?>">Modifier</a></th>
+                                            <td><?php echo $sall['id']; ?></td>
+                                            <td><?php echo $sall['code']; ?></td>
+                                            <td><?php echo $sall['nom_ue']; ?></td>
+                                            <td><?php echo $sall['ens']; ?></td>
+                                            <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2"  href="modifier.php?id=<?=$sall["id"]?>">Modifier</a></th>
                                         </tr>
                                     <?php endforeach; ?>
 
@@ -96,8 +96,8 @@
                                     <div class="form-group">
                                         <select name="classe" id="classe" class="form-select" aria-label="Default select example">
                                         <option selected disabled>Classe</option>
-                                            <?php foreach ($horaires as $horaire): ?>
-                                                <option value="<?=$horaire['id_classe']?>"><?=$horaire['nom_classe']?></option>
+                                            <?php foreach ($sal as $sall): ?>
+                                                <option value="<?=$sall['id_classe']?>"><?=$sall['nom_classe']?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>

@@ -1,17 +1,89 @@
+CREATE TABLE departement (
+    id INT PRIMARY KEY,
+    nom VARCHAR(100)
+);
 
-DROP TABLE IF EXISTS enseignant ;
-CREATE TABLE enseignant (id_enseignant BIGINT AUTO_INCREMENT NOT NULL, email_enseignant VARCHAR(50), nom_enseignant VARCHAR(50), mdp_enseignant VARCHAR(50), PRIMARY KEY (id_enseignant)) ENGINE=InnoDB; 
-DROP TABLE IF EXISTS ue ; 
-CREATE TABLE ue (id_ue BIGINT AUTO_INCREMENT NOT NULL, code_ue VARCHAR(50), nom_ue VARCHAR(50), id_enseignant bigint
-, id_classe bigint
-, PRIMARY KEY (id_ue)) ENGINE=InnoDB;  
-DROP TABLE IF EXISTS departement ; CREATE TABLE departement (id_departement BIGINT AUTO_INCREMENT NOT NULL, nom_departement VARCHAR(50), PRIMARY KEY (id_departement)) ENGINE=InnoDB
-;  
-DROP TABLE IF EXISTS horaire ; 
-CREATE TABLE horaire (id_horaire INT AUTO_INCREMENT NOT NULL, jour_horaire VARCHAR(50), heure_debut_horaire TIME, heure_fin_horaire TIME, id_ue bigint
-, id_salle bigint
-, PRIMARY KEY (id_horaire)) ENGINE=InnoDB;  
-DROP TABLE IF EXISTS salle ; CREATE TABLE salle (id_salle BIGINT AUTO_INCREMENT NOT NULL, nom_salle VARCHAR(50), capacite_salle INT, PRIMARY KEY (id_salle)) ENGINE=InnoDB;  
-DROP TABLE IF EXISTS classe ;
-CREATE TABLE classe (id_classe BIGINT AUTO_INCREMENT NOT NULL, nom_classe VARCHAR(50), code_classe VARCHAR(50), effectif_classe BIGINT, id_departement bigint
-, PRIMARY KEY (id_classe)) ENGINE=InnoDB;  
+CREATE TABLE classe (
+    id INT PRIMARY KEY,
+    nom VARCHAR(100),
+    departementid INT,
+    niveau INT,
+    FOREIGN KEY (departementid) REFERENCES departement(id)
+);
+
+CREATE TABLE enseignant (
+    id INT PRIMARY KEY,
+    nom VARCHAR(100),
+    email VARCHAR(100)
+);
+
+CREATE TABLE salle (
+    id INT PRIMARY KEY,
+    nom VARCHAR(100) UNIQUE,
+    capacite INT
+);
+
+CREATE TABLE ue (
+    code VARCHAR(10) PRIMARY KEY,
+    nom VARCHAR(100),
+    enseignantid INT,
+    FOREIGN KEY (enseignantid) REFERENCES enseignant(id)
+);
+
+CREATE TABLE planning (
+    id INT PRIMARY KEY,
+    classeid INT,
+    uecode VARCHAR(10),
+    salleid INT,
+    jour_id INT, 
+    horaire_id int,
+    FOREIGN key (horaire_id) references horaire(id),
+    FOREIGN KEY (jour_id) REFERENCES jour(id),
+    FOREIGN KEY (classeid) REFERENCES classe(id),
+    FOREIGN KEY (uecode) REFERENCES ue(code),
+    FOREIGN KEY (salleid) REFERENCES salle(id)
+);
+
+Create table horaire(
+    id int primary key,
+    heuredebut TIME,
+    heurefin TIME,
+);
+
+CREATE TABLE jour(
+    id INT PRIMARY KEY,
+    nom VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE desiderata (
+    id INT PRIMARY KEY,
+    enseignantid INT,
+    jour VARCHAR(10),
+    heuredebut TIME,
+    heurefin TIME,
+    FOREIGN KEY (enseignantid) REFERENCES enseignant(id)
+);
+
+CREATE TABLE periodemodification (
+    id INT PRIMARY KEY,
+    datedebut DATE,
+    datefin DATE
+);
+
+CREATE TABLE modification (
+    id INT PRIMARY KEY,
+    planningid INT,
+    datemodification DATE,
+    heuredebutprecedente TIME,
+    heurefinprecedente TIME,
+    heuredebutnouvelle TIME,
+    heurefinnouvelle TIME,
+    utilisateurid INT,
+    FOREIGN KEY (planningid) REFERENCES planning(id)
+);
+
+CREATE TABLE administrateur (
+    id INT PRIMARY KEY,
+    nom VARCHAR(100),
+    email VARCHAR(100)
+);

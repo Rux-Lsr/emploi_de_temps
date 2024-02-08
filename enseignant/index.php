@@ -1,16 +1,21 @@
-<?php session_start() ;
-    
-    if(!isset($_SESSION['user']) || empty($_SESSION['user']))
-        header('Location: ..\error_pages\401.php');
+<?php 
+session_start();
+    require_once "include/connexion.php";
+    $sal  = $connexion->query("SELECT * FROM horaire order by id asc", PDO::FETCH_ASSOC);
+    $jours = $connexion->query("SELECT * FROM jour order by id asc", PDO::FETCH_ASSOC);
+    $desideratas  = $connexion->query("SELECT desiderata.id, j.nom as jour, h.heuredebut, h.heurefin FROM desiderata join jour j on j.id = jour_id join horaire h on h.id=horaire_id join enseignant on enseignant.id= enseignantid where enseignantid = {$_SESSION["user"]["id"]} order by jour  asc", PDO::FETCH_ASSOC);
+    $stmt = null;
 
-        require_once("include/connexion.php");
-        require_once("classes/Classe.php");
-        require_once("classes/Horaire.php");
-        $hors = new Horaire($connexion);
-        $result = $hors->read();
+    if(isset($_POST["sub"])){
+        $stmt = $connexion->prepare("INSERT INTO `desiderata`(`enseignantid`, `jour_id`, `horaire_id`) VALUES ('{$_SESSION["user"]["id"]}','{$_POST["jour"]}','{$_POST["horaire"]}')");
+        $stmt->execute();
+        echo"<script>alert('Desirata soumis avec success')</script>";
+    }else
+        echo"<script>alert('Echec de soumission du  Desirata')</script>";
 
-       
-        ?>
+
+?>  
+ 
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -28,113 +33,57 @@
     <body class="sb-nav-fixed">
         <?php include_once "templates/fixedNavBar.php";?>
         <div id="layoutSidenav">
-            <!-- ; -->
             <div id="layoutSidenav_content">
             <?php include_once "templates/sideBar.php" ?>
                 <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
-                        <div class="container">
-                            <div class="row">
-                                   <div class="col">
-                                   <form action="" method="post">
-                            <div class="form-group">
-                            <label for="semestre">Semestre:</label>
-                            <select class="form-control" id="semestre" name="semestre">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                            </select>
-                            </div>
-                            <div class="form-group">
-                            <label for="groupe">Groupe:</label>
-                            <select class="form-control" id="groupe" name="groupe" required>
-                                
-                                <?php
-                                $class = new Classe($connexion);
-                                
-                                $res = $class->read();
-                                // Génération des options de la liste déroulante
-                                foreach ($res as $row) {
-                                    echo '<option value="' . htmlspecialchars($row['id_classe']) . '">' . htmlspecialchars($row['nom_classe']) . '</option>';
-                                }
-                                ?>
-                            </select>
-                            </div><br>
-                            <?php 
-                                if(isset($_POST['sub'])) {
-                                    $semestre = $_POST['semestre'];
-                                    $groupe = $_POST['groupe'];
-                                        
-                                    $result = $hors->read_horaire_ue_salleParam($semestre, $groupe);
-                                }
-                            ?>
-                            <button type="submit" class="btn btn-primary" name="sub">Afficher l'emploi du temps</button>
-                        </form> 
-
-                                   </div>  
-                                   <div class="col">
-                                   <form action="" method="post">
-                                        <div class="form-group">
-                                            <label for="salle">Salle:</label>
-                                            <select class="form-control" id="salle" name="salle">
-                                            <?php
-                                                
-                                                ?>
-                                            </select>
-                                        </div><br>
-                                        <button type="submit" name="submit2" class="btn btn-primary">Choisir la salle</button>
-                                    </form>
-                                   </div>           
-                            </div>
-                        </div>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Jour</th>
-                                <th>Heure de début</th>
-                                <th>Heure de fin</th>
-                                <th>UE</th>
-                                <th>Enseignant</th>
-                                <th>Salle</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($result as $row): ?>
-                            <?php 
-                                if(count($result) > 5) {
-                                    ?>
-                                        <tr>
-                                <td><?= htmlspecialchars($row['nom_jour']) ?></td>
-                                <td><?= htmlspecialchars($row['heure_debut_horaire']) ?></td>
-                                <td><?= htmlspecialchars($row['heure_fin_horaire']) ?></td>
-                                <td><?= htmlspecialchars($row['nom_ue']) ?></td>
-                                <td><?= htmlspecialchars($row['nom_enseignant']) ?></td>
-                                <td><?= htmlspecialchars($row['nom_salle']) ?></td>
-                            </tr>
-                                    <?php
-                                }else{
-                                    ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($row['nom_jour']) ?></td>
-                                            <td><?= htmlspecialchars($row['heure_debut_horaire']) ?></td>
-                                            <td><?= htmlspecialchars($row['heure_fin_horaire']) ?></td>
-                                            <td><?= htmlspecialchars($row['ue'])?></td>
-                                            <td></td>
-                                            <td><?= htmlspecialchars($row['salle']) ?></td>
-                                        </tr>
-                                    <?php
-                                } 
-                            ?>
-                            <?php endforeach; 
-                                echo count($result);
-                            ?>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>  
+                    
+                <div class="container">
+                    <h2>Formulaire de Désidérata</h2>
+                    <form action="" method="post">
+                    <div class="form-group">
+                        <label for="jour">Jour:</label>
+                        <select class="form-control" id="jour" name="jour">
+                            <?php foreach($jours as $sall):?>
+                                <option value="<?=$sall["id"]?>"><?=$sall["nom"]?></option>
+                                <?php endforeach;  ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaire">Plage horaire:</label>
+                        <select class="form-control" id="horaire" name="horaire">
+                        <?php foreach($sal as $horaire):?>
+                                <option value="<?=$horaire["id"]?>"><?=$horaire["heuredebut"]?>-<?=$horaire["heurefin"]?></option>
+                                <?php endforeach;  ?>
+                        </select>
+                    </div><br>
+                        <button type="submit" class="btn btn-primary" name="sub">Soumettre</button>
+                    </form>
+                </div>  
+                <h2>Liste des desideratas</h2>
+                <div class="container">
+                <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Jour</th>
+                    <th>Heure de début</th>
+                    <th>Heure de fin</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Remplacez ces lignes par les données de votre base de données -->
+                <?php foreach($desideratas as $des):?>
+                <tr>
+                    <td><?=$des["jour"]?></td>
+                    <td><?=$des["heuredebut"]?></td>
+                    <td><?=$des["heurefin"]?></td>
+                    <td><a class="btn btn-primary" name="modif" href="modifier.php?id=<?=$des['id']?>">Modifier</a><a class="btn btn-danger">Supprimer</a></td>
+                </tr>
+                <?php endforeach;?>
+                <!-- Fin des données de la base de données -->
+            </tbody>
+        </table>
+                </div>
                 </main>
             </div>
         </div>

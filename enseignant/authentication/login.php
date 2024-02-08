@@ -49,22 +49,20 @@
             $msg = "E-mail ou mot de passe incorrect";
             if(isset($_POST["submit"])){
                 $mail = htmlspecialchars( $_POST['mail']);
-                $mdp = htmlspecialchars($_POST['pswd']);
+                $mdp = htmlspecialchars($_POST['name']);
                 if(!empty($mail) && !empty($mdp)){
                     require_once '../include\connexion.php';
                     require_once '../classes\Enseignant.php';
                     $ens = new Enseignant($connexion);
-                    $result = $ens->readParam($mail, $mdp);
+                    $result = $ens->readP($mdp, $mail);
                    if($result){
-                    $_SESSION["user"] = $result;
-                    if( $_SESSION["user"]["priv"] == 0)
+                        $_SESSION["user"] = $result;
                         header("Location:../index.php");
-                    else 
-                    header("Location:../hor.php");
+                   
 
                    }else 
         ?>
-            <div class="alert alert-warning mx-0 mt-0"><?php echo $msg ?></div>
+            <div class="alert alert-warning mx-0 mt-0"><?php echo $msg ; var_dump($result);?></div>
         <?php
                 }
 
@@ -82,12 +80,12 @@
                                     <div class="card-body">
                                         <form action="" method="post">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="mail"/>
-                                                <label for="inputEmail">Email address</label>
+                                                <input class="form-control" id="inputName" type="text" placeholder="Nom" name="name"/>
+                                                <label for="inputName">Nom</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" name="pswd"/>
-                                                <label for="inputPassword">Password</label>
+                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="mail"/>
+                                                <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="form-check mb-3">
                                                 

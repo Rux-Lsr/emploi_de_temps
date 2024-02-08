@@ -3,8 +3,14 @@
     include_once "classes/Salle.php";
  // Exemple d'utilisation de la fonction
     
-    $classes = new Salle($connexion);
-    $horaires = $classes->read();
+    $salles = new Salle($connexion);
+    $sal = $salles->read();
+
+    if(isset($_POST["sub"])){
+        $salles->create($_POST["nom"], $_POST["capacite"]);
+        echo"<script>alert('Desirata soumis avec success')</script>";
+    }else
+        echo"<script>alert('Echec de soumission du  Desirata')</script>";
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -29,70 +35,45 @@
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Dashboard</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Liste des Salles</li>
-                        </ol>
-                       
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                               <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalEnseignant">Ajouter une Salles</button>
+                       <div class="container">
+                       <form method="post">
+                            <div class="form-group">
+                                <label for="nom">Nom de la salle:</label>
+                                <input type="text" id="nom" name="nom" required class="form-control">
                             </div>
-                       
-                            <div class="card-body">
-                                <table class="table table-light">
-                                    <thead>
-                                        <tr> 
-                                            <th>id</th>
-                                            <th>nom</th>
-                                            <th>Capacité</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php foreach ($horaires as $horaire): ?>
-                                        <tr>
-                                            <td><?php  echo $horaire['id_salle']; ?></td>
-                                            <td><?php echo $horaire['nom_salle']; ?></td>
-                                            <td><?php echo $horaire['capacite_salle']; ?></td>
-                                            <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
-                                        </tr>
-                                    <?php endforeach; ?>
+                            <div class="form-group">
+                                <label for="capacite">Capacité:</label>
+                                <input type="number" id="capacite" name="capacite" required  class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" name="sub" class="btn btn-primary">Ajouter la salle</button>
+                            </div>
+                        </form>
+                       </div>
+                       <h3>Liste des salles</h3>   
+                        <table class="table table-light">
+                            <thead>
+                                <tr> 
+                                    <th>Numero</th>
+                                    <th>nom</th>
+                                    <th>Capacité</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($sal as $sall): ?>
+                                <tr>
+                                    <td><?php echo $sall['id']; ?></td>
+                                    <td><?php echo $sall['nom']; ?></td>
+                                    <td><?php echo $sall['capacite']; ?></td>
+                                    <th><a class="btn btn-danger">Supprimer</a > <a class="btn btn-warning ml-2">Modifier</a></th>
+                                </tr>
+                            <?php endforeach; ?>
 
-                                    </tbody>
-                                </table>
-                            </div>   
-                        </div>
-                        </div>
-                    </div> 
-                    <div class="modal fade" id="modalEnseignant" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Formulaire pour saisir les informations de l'enseignant -->
-                                <form action="traitement.php" method="post">
-                                    <div class="form-group">
-                                        <label for="nom">Nom Salle :</label>
-                                        <input type="text" class="form-control" id="nom" name="nom" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="capaite">Capacité :</label>
-                                        <input type="text" class="form-control" id="capaite" name="capaite" required>
-                                    </div>
-                                    <br>
-                                    <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
-                            </div>
+                            </tbody>
+                        </table>
                         </div>
                     </div>
-                </div> 
                 </main>
                
             </div>
