@@ -16,7 +16,7 @@ session_start();
 
 ?>  
  
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
     <head>
         <meta charset="utf-8" />
@@ -25,10 +25,10 @@ session_start();
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Dashboard ens - Gestion de requette</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <?php include_once "templates/fixedNavBar.php";?>
@@ -37,15 +37,15 @@ session_start();
             <?php include_once "templates/sideBar.php" ?>
                 <main>
                 <h1 class="my-4">Desiderata</h1>
-                    <table class="table table-striped">
+                    <table id="desiderataTable" class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <td scope="col">#</td>
                                 <th scope="col">Enseignant</th>
                                 <th scope="col">Jour</th>
                                 <th scope="col">Heure début</th>
                                 <th scope="col">Heure fin</th>
-                                <th scope="col">Actions</th>
+                                <td scope="col">Actions</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,9 +58,9 @@ session_start();
                                 <td><?=$des["debut"]?></td>
                                 <td><?=$des["fin"]?></td>
                                 <td>
-                                    <button type="button" class="btn btn-success" name="sub">Valider</button>
-                                    <button type="button" class="btn btn-primary">Modifier</button>
-                                    <button type="button" class="btn btn-danger">Supprimer</button>
+                                    <a type="button" class="btn" name="sub" title="valider"><i class="fas fa-check-circle" style="color: green;"></i></a>
+                                    <a type="button" class="btn " title="modifier"><i class="fas fa-edit" style="color: yellow;"></i></a>
+                                    <a type="button" class="btn " title="Supprimer"><i class="fas fa-check-circle" style="color: red;"></i></a>
                                 </td>
                             </tr>
                             <?php endforeach;?>
@@ -71,8 +71,27 @@ session_start();
                 </main>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-     
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#desiderataTable').DataTable();
+
+                // Ajouter les boîtes de recherche
+                $('#desiderataTable thead th').each(function() {
+                    var title = $(this).text();
+                    $(this).html(title+'<br><input type="text" placeholder="Rechercher" />');
+                });
+
+                // Appliquer le filtre
+                table.columns().every(function() {
+                    var that = this;
+                    $('input', this.header()).on('keyup change', function() {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
