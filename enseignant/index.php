@@ -8,11 +8,24 @@ session_start();
 
     if(isset($_POST["sub"])){
         $stmt = $connexion->prepare("INSERT INTO `desiderata`(`enseignantid`, `jour_id`, `horaire_id`) VALUES ('{$_SESSION["user"]["id"]}','{$_POST["jour"]}','{$_POST["horaire"]}')");
-        $stmt->execute();
-        echo"<script>alert('Desirata soumis avec success')</script>";
-    }else
-        echo"<script>alert('Echec de soumission du  Desirata')</script>";
+        $res = $stmt->execute();
 
+        if($res)
+            echo"<script>alert('Desirata soumis avec success');location.href='index.php'</script>";
+        else
+            echo"<script>alert('Echec de soumission du desideratsa');location.href='index.php'</script>";
+    }
+
+    if(isset($_POST["del"])){
+        $sql = "DELETE FROM desiderata where id = {$_POST['del']}";
+        $stmt = $connexion->prepare("$sql");
+        $res = $stmt->execute();
+
+        if($res)
+            echo"<script>alert('Supression reussie');location.href='index.php'</script>";
+        else
+            echo"<script>alert('Echec de suppression');location.href='index.php'</script>";
+    }
 
 ?>  
  
@@ -72,13 +85,21 @@ session_start();
             </thead>
             <tbody>
                 <!-- Remplacez ces lignes par les données de votre base de données -->
-                <?php foreach($desideratas as $des):?>
-                <tr>
-                    <td><?=$des["jour"]?></td>
-                    <td><?=$des["heuredebut"]?></td>
-                    <td><?=$des["heurefin"]?></td>
-                    <td><a class="btn btn-primary" name="modif" href="modifier.php?id=<?=$des['id']?>">Modifier</a><a class="btn btn-danger">Supprimer</a></td>
-                </tr>
+                <?php 
+                $cpt = 0;
+                    foreach($desideratas as $des):
+                ?>
+                <form action="" method="post" id="<?=(++$cpt)?>">
+                    <tr>
+                        <td><?=$des["jour"]?></td>
+                        <td><?=$des["heuredebut"]?></td>
+                        <td><?=$des["heurefin"]?></td>
+                        <td>
+                            <a class="btn btn-primary" name="modif" href="modifier.php?id=<?=$des['id']?>">Modifier</a>
+                            <button type="submit" class="btn btn-danger" name="del" value="<?=$des['id']?>">Supprimer</button>
+                        </td>
+                    </tr>
+                </form>
                 <?php endforeach;?>
                 <!-- Fin des données de la base de données -->
             </tbody>
