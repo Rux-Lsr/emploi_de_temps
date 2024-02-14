@@ -7,10 +7,35 @@ session_start();
     $stmt = null;
 
    if(isset($_POST["valider"])){
-        $sql = "INSERT INTO `planning` (`classeid`, `uecode`, `salleid`, `jour_id`, `horaire_id`)
-        SELECT `classeid`, `uecode`, `salleid`, `jour_id`, `horaire_id`
+        // Commencer la transaction
+        $connexion->beginTransaction();
+    
+        // Préparer et exécuter la requête d'insertion
+        $sql1 = "INSERT INTO `planning` (`classeid`, `uecode`, `jour_id`, `horaire_id`)
+        SELECT `ue`.`classeid`, `ue`.`code`, `desiderata`.`jour_id`, `desiderata`.`horaire_id`
         FROM `desiderata`
-        WHERE `id` = {$_POST['valider']};";
+        JOIN `ue` ON `ue`.`enseignantid` = `desiderata`.`enseignantid`
+        WHERE `desiderata`.`id` = {$_POST['valider']}";
+
+        $stmt = $connexion->prepare($sql1);
+        $res = $stmt->execute();
+    
+        // Préparer et exécuter la requête de suppression
+        $sql2 = "DELETE FROM desiderata where id = {$_POST['valider']}";
+        $stmt2 = $connexion->prepare($sql2);
+        $res2 = $stmt2->execute();
+    
+       if($res && $res2){
+             // Si les deux opérations ont réussi, valider la transaction
+            $connexion->commit();
+            echo "<script>alert('Validation du desiderata reussie');location.href='desideratas.php'</script>";
+       }else {
+             // En cas d'erreur, annuler la transaction
+        $connexion->rollBack();
+    
+        echo "<script>alert('Échec de validation du desiderata: " . $e->getMessage() . "');location.href='desideratas.php'</script>";
+       }
+    
     }
 
 
@@ -31,12 +56,13 @@ session_start();
         <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     </head>
     <body class="sb-nav-fixed">
+
         <?php include_once "templates/fixedNavBar.php";?>
         <div id="layoutSidenav">
             <div id="layoutSidenav_content">
             <?php include_once "templates/sideBar.php" ?>
                 <main>
-                <h1 class="my-4">Desiderata</h1>
+                <h1 class="my-4">Desiderata</h1><?php var_dump($_POST);?>
                     <table id="desiderataTable" class="table table-striped">
                         <thead>
                             <tr>
@@ -50,19 +76,21 @@ session_start();
                         <tbody>
                             <!-- Remplacer par les données dynamiques -->
                             <?php foreach($desideratas as $des):?>
-                                <form action="" method="post">
-                                <tr>
-                                    <th scope="row"><?=$des["id"]?></th>
-                                    <td><?=$des["Enseignant"]?></td>
-                                    <td><?=$des["jour"]?></td>
-                                    <td><?=$des["debut"]?> - <?=$des["fin"]?></td>
-                                    <td>
-                                        <button type="submit" class="btn" name="valider" value="<?=$des["id"]?>" title="valider"><i class="fas fa-check-circle" style="color: green;"></i></button>
-                                        <button type="submit" class="btn" name="Modifier" value="edit" title="modifier"><i class="fas fa-edit" style="color: yellow;"></i></button>
-                                        <button type="submit" class="btn" name="supprimer" value="rm" title="Supprimer"><i class="fas fa-check-circle" style="color: red;"></i></button>
-                                    </td>
-                                </tr>
-                                </form>
+                                
+                                    <tr>
+                                    <form action="" method="post"  id="<?=$des["id"]?>">
+                                        <th scope="row"><?=$des["id"]?></th>
+                                        <td><?=$des["Enseignant"]?></td>
+                                        <td><?=$des["jour"]?></td>
+                                        <td><?=$des["debut"]?> - <?=$des["fin"]?></td>
+                                        <td>
+                                            <button type="submit" class="btn" name="valider" value="<?=$des["id"]?>" title="valider"><i class="fas fa-check-circle" style="color: green;"></i> ok </button>
+                                            <a name="modif" href="modifier.php?id=<?=$des['id']?>"><i class="fas fa-edit" style="color: yellow;"></i></a>
+                                            <button type="submit" class="btn" name="del" value="<?=$des['id']?>"><i class="fas fa-check-circle" style="color: red;"></i></button>
+                                        </td>
+                                    </form>
+                                    </tr>
+                               
                             <?php endforeach;?>
                             <!-- Fin des données dynamiques -->
                         </tbody>
