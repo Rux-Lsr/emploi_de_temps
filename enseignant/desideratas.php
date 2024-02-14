@@ -6,12 +6,12 @@ session_start();
     $desideratas  = $connexion->query("SELECT desiderata.id, e.nom as Enseignant, j.nom as jour, h.heuredebut as debut, h.heurefin as fin from desiderata join enseignant e on e.id=enseignantid join jour j on j.id=jour_id JOIN horaire h on horaire_id=h.id;", PDO::FETCH_ASSOC);
     $stmt = null;
 
-   if(isset($_POST["sub"])){
-        $stmt = $connexion->prepare("INSERT INTO `desiderata`(`enseignantid`, `jour_id`, `horaire_id`) VALUES ('{$_SESSION["user"]["id"]}','{$_POST["jour"]}','{$_POST["horaire"]}')");
-        $stmt->execute();
-        echo"<script>alert('Desirata soumis avec success')</script>";
-    }else
-        echo"<script>alert('Echec de soumission du  Desirata')</script>";
+   if(isset($_POST["valider"])){
+        $sql = "INSERT INTO `planning` (`classeid`, `uecode`, `salleid`, `jour_id`, `horaire_id`)
+        SELECT `classeid`, `uecode`, `salleid`, `jour_id`, `horaire_id`
+        FROM `desiderata`
+        WHERE `id` = {$_POST['valider']};";
+    }
 
 
 ?>  
@@ -43,26 +43,26 @@ session_start();
                                 <td scope="col">#</td>
                                 <th scope="col">Enseignant</th>
                                 <th scope="col">Jour</th>
-                                <th scope="col">Heure début</th>
-                                <th scope="col">Heure fin</th>
+                                <th scope="col">Horaire</th>
                                 <td scope="col">Actions</td>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Remplacer par les données dynamiques -->
                             <?php foreach($desideratas as $des):?>
-                            <tr>
-                                <th scope="row"><?=$des["id"]?></th>
-                                <td><?=$des["Enseignant"]?></td>
-                                <td><?=$des["jour"]?></td>
-                                <td><?=$des["debut"]?></td>
-                                <td><?=$des["fin"]?></td>
-                                <td>
-                                    <a type="button" class="btn" name="sub" title="valider"><i class="fas fa-check-circle" style="color: green;"></i></a>
-                                    <a type="button" class="btn " title="modifier"><i class="fas fa-edit" style="color: yellow;"></i></a>
-                                    <a type="button" class="btn " title="Supprimer"><i class="fas fa-check-circle" style="color: red;"></i></a>
-                                </td>
-                            </tr>
+                                <form action="" method="post">
+                                <tr>
+                                    <th scope="row"><?=$des["id"]?></th>
+                                    <td><?=$des["Enseignant"]?></td>
+                                    <td><?=$des["jour"]?></td>
+                                    <td><?=$des["debut"]?> - <?=$des["fin"]?></td>
+                                    <td>
+                                        <button type="submit" class="btn" name="valider" value="<?=$des["id"]?>" title="valider"><i class="fas fa-check-circle" style="color: green;"></i></button>
+                                        <button type="submit" class="btn" name="Modifier" value="edit" title="modifier"><i class="fas fa-edit" style="color: yellow;"></i></button>
+                                        <button type="submit" class="btn" name="supprimer" value="rm" title="Supprimer"><i class="fas fa-check-circle" style="color: red;"></i></button>
+                                    </td>
+                                </tr>
+                                </form>
                             <?php endforeach;?>
                             <!-- Fin des données dynamiques -->
                         </tbody>
