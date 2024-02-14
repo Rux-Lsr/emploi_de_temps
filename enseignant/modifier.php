@@ -3,15 +3,20 @@ session_start();
     require_once "include/connexion.php";
     $sal  = $connexion->query("SELECT * FROM horaire order by id asc", PDO::FETCH_ASSOC);
     $jours = $connexion->query("SELECT * FROM jour order by id asc", PDO::FETCH_ASSOC);
-    $desideratas  = $connexion->query("SELECT j.nom as jour, h.heuredebut, h.heurefin FROM desiderata join jour j on j.id = jour_id join horaire h on h.id=horaire_id join enseignant on enseignant.id= enseignantid where enseignantid = {$_SESSION["user"]["id"]} order by jour  asc", PDO::FETCH_ASSOC);
-    $stmt = null;
+   $stmt  = $connexion->prepare("SELECT j.nom as jour, horaire_id FROM desiderata join jour j on j.id = jour_id  where desiderata.id = {$_GET["id"]}  order by jour  asc");
+   $stmt->execute();
+   $des = $stmt->fetch(PDO::FETCH_ASSOC);
+   $stmt = null;
 
     if(isset($_POST["sub"])){
         $stmt = $connexion->prepare("UPDATE desiderata set jour_id={$_POST["jour"]}, horaire_id={$_POST["horaire"]} where id={$_GET["id"]}");
-        $stmt->execute();
-        echo"<script>alert('Desirata modifie avec success')</script>";
-    }else
-        echo"<script>alert('Echec de modification du  Desirata')</script>";
+        $res = $stmt->execute();
+
+        if($res)
+            echo"<script>alert('Desirata Mis a jour avec success')</script>";
+        else
+            echo"<script>alert('Echec de modification du desideratsa')</script>";
+    }
 
    
 
@@ -45,15 +50,15 @@ session_start();
                         <label for="jour">Jour:</label>
                         <select class="form-control" id="jour" name="jour">
                             <?php foreach($jours as $sall):?>
-                                <option value="<?=$sall["id"]?>"><?=$sall["nom"]?></option>
-                                <?php endforeach;  ?>
+                                <option value="<?=$sall["id"]?>" <?=(strcmp($des["jour"],$sall["nom"])) ?  "" :  "selected"; ?> ><?=$sall["nom"]?></option>
+                            <?php endforeach;  ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="horaire">Plage horaire:</label>
                         <select class="form-control" id="horaire" name="horaire">
                         <?php foreach($sal as $horaire):?>
-                                <option value="<?=$horaire["id"]?>"><?=$horaire["heuredebut"]?>-<?=$horaire["heurefin"]?></option>
+                                <option value="<?=$horaire["id"]?>" <?=($des["horaire_id"] == $horaire["id"]) ?  "selected" :  ""; ?>><?=$horaire["heuredebut"]?>-<?=$horaire["heurefin"]?></option>
                                 <?php endforeach;  ?>
                         </select>
                     </div><br>
