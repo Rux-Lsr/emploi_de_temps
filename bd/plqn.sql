@@ -72,6 +72,8 @@ CREATE TABLE `ue` (
 `code` varchar(10) NOT NULL,
 `nom` varchar(100) DEFAULT NULL,
 `enseignantid` int(11) DEFAULT NULL
+`classeid` int DEFAULT NULL, 
+FOREIGN KEY(`classeid`) REFERENCES `classe`(`id`)
 ) 
 ALTER TABLE `administrateur`
 ADD PRIMARY KEY (`id`);

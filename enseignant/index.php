@@ -47,7 +47,7 @@ session_start();
         <?php include_once "templates/fixedNavBar.php";?>
         <div id="layoutSidenav">
             <div id="layoutSidenav_content">
-            <?php include_once "templates/sideBar.php" ?>
+   
                 <main>
                     
                 <div class="container">
