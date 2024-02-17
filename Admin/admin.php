@@ -10,6 +10,12 @@
 
     $salles = $connexion->query("SELECT * from vue_salle");
     $salle = $salles->fetchAll(PDO::FETCH_ASSOC);
+
+    $dpt = $connexion->query("SELECT * from departement");
+    $dpts = $dpt->fetchAll(PDO::FETCH_ASSOC);
+
+    $ue = $connexion->query("SELECT * from ue where enseignantid is null");
+    $ues = $ue->fetchAll(PDO::FETCH_ASSOC);
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +48,7 @@
                                 <div class="col-md-3">
                                     <form action="" method="post">
                                         <div class="form-group">
-                                        <legend>Salle </legend>
+                                        <legend>Salle  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSalle"> Ajouter</button></legend>
                                             <label for="salle">Salle</label>
                                             <select class="form-control" id="salle" name="salle">
                                             <?php foreach($salle as $sal):?>
@@ -64,7 +70,7 @@
                                 </div>
                                 <div class="col-md-3 ">
                                     <form action="" method="post">
-                                        <legend>Classe</legend>
+                                        <legend>Classe    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalClasse"> Ajouter</button></legend>
                                         <div class="form-group">
                                             <label for="classe">Classe</label>
                                             <select class="form-control" id="classe" name="classeS">
@@ -88,7 +94,7 @@
                                 <div class="col-md-3">
                                     <form action="" method="post">
                                             <div class="form-group">
-                                            <legend>Enseignant </legend>
+                                            <legend>Enseignant <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalEnseignant"> Ajouter</button></legend>
                                                 <label for="enseignant">Enseignant</label>
                                                 <select class="form-control" id="enseignant" name="enseignant">
                                                     
@@ -109,7 +115,7 @@
                                             </div>
                                     </form>
                                 </div>
-                                <div class="col-md-3 bg-warning">Div enfant 4</div>
+                               
                             <div>
                         </div><br><br>
                        
@@ -146,10 +152,8 @@
                                     <tbody>
                                         <?php 
                                             if(!empty($res)){
-                                                
-                                            foreach ($res as  $value):
-                                         ?>
-                                            
+                                                foreach ($res as  $value):
+                                         ?>    
                                         <tr> 
                                             <td><?=$value["jour"]?></td>
                                             <td><?=$value["debut"]?> - <?=$value["fin"]?></td>
@@ -261,35 +265,203 @@
                         </div>
                         </div>
                     </div> 
-                    <div class="modal fade" id="modalEnseignant" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Formulaire pour saisir les informations de l'enseignant -->
-                                <form action="traitement.php" method="post">
-                                    <div class="form-group">
-                                        <label for="nom">Nom Departement :</label>
-                                        <input type="text" class="form-control" id="nom" name="nom" required>
+                        <div class="modal fade" id="modalSalle" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalEnseignantLabel">Ajouter une SAlle</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                    <br>
-                                    <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
+                                    <div class="modal-body">
+                                        <!-- Formulaire pour saisir les informations de l'enseignant -->
+                                        <form action=" " method="post">
+                                            <div class="form-group">
+                                                <label for="nom">Nom Salle :</label>
+                                                <input type="text" class="form-control" id="nom" name="nomSalle" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code">Capacite :</label>
+                                                <input type="number" class="form-control" id="code" name="capacite" required>
+                                            </div><br>
+                                            <button type="submit" class="btn btn-primary" value="addSalle" name="valider">Enregistrer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <?php 
+                            if (isset($_POST['valider'])) {
+
+                                switch ($_POST['valider']) {
+                                    case 'addSalle':
+                                        // Préparer la requête SQL
+                                        $stmt = $connexion->prepare("INSERT INTO salle (nom, capacite) VALUES (:nom, :capacite)");
+                                        $stmt->bindParam(':nom', $_POST['nomSalle']);
+                                        $stmt->bindParam(':capacite', $_POST['capacite']);
+                        
+                                        // Exécuter la requête
+                                        $res = $stmt->execute();
+
+                                        if($res)
+                                            echo"<script>alert('Ajout de salle  reussie');location.href='admin.php'</script>";
+                                        else
+                                            echo"<script>alert('Echec d'ajout de la sallw');location.href='admin.php'</script>";
+                                        break;
+                                    case 'addClasse':
+                                        // Préparer la requête SQL
+                                        $stmt = $connexion->prepare("INSERT INTO classe (nom, departementid, niveau) VALUES (:nom, :departementid, :niveau)");
+                                        $stmt->bindParam(':nom', $_POST['nomClasse']);
+                                        $stmt->bindParam(':departementid', $_POST['departementid']);
+                                        $stmt->bindParam(':niveau', $_POST['niveau']);
+                        
+                                        // Exécuter la requête
+                                        $res = $stmt->execute();
+
+                                        if($res)
+                                            echo"<script>alert('Ajout de classe  reussie');location.href='admin.php'</script>";
+                                        else
+                                            echo"<script>alert('Echec d'ajout de la classe');location.href='admin.php'</script>";
+                                        break;
+                                    case 'addEnseignant':
+                                        // Préparer la requête SQL
+                                        $stmt = $connexion->prepare("INSERT INTO enseignant (nom, email, mdp) VALUES (:nom, :email, :numero_tel)");
+                                        $stmt->bindParam(':nom', $_POST['nomEnsignant']);
+                                        $stmt->bindParam(':email', $_POST['email']);
+                                        $stmt->bindParam(':numero_tel', $_POST['mdp']);
+                        
+                                        // Exécuter la requête
+                                        $stmt->execute();
+                                        
+                                        // Obtenir l'ID de l'enseignant inséré
+                                        $enseignantid = $connexion->lastInsertId();
+                        
+                                        // Préparer la requête SQL pour associer l'enseignant à une UE
+                                        $stmt = $connexion->prepare("UPDATE ue SET enseignantid = :enseignantid WHERE id = :ue");
+                                        $stmt->bindParam(':enseignantid', $enseignantid);
+                                        $stmt->bindParam(':ue', $_POST['ue']);
+                        
+                                        // Exécuter la requête
+                                        $res = $stmt->execute();
+
+                                        if($res)
+                                            echo"<script>alert('Ajout d'enseignant  reussie');location.href='admin.php'</script>";
+                                        else
+                                            echo"<script>alert('Echec d'ajout de l'enseignant');location.href='admin.php'</script>";
+                                        break;
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            }
+                        ?>
+                        <div class="modal fade" id="modalClasse" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalEnseignantLabel">Ajouter une Classe</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulaire pour saisir les informations de l'enseignant -->
+                                    <form action="" method="post">
+                                        <div class="form-group">
+                                            <label for="nom">Nom Classe :</label>
+                                            <input type="text" class="form-control" id="nom" name="nomClasse" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Effectif</label>
+                                            <input type="number" class="form-control" id="effe" name="effectif" required>
+                                        </div><br>
+                                        <select class="form-control" id="enseignant" name="enseignant">   
+                                                <?php foreach($dpts as $enseignant):?>
+                                                        <option value="<?=$enseignant["id"]?>"><?=$enseignant["nom"]?></option>
+                                                <?php endforeach;  ?>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary" value="addClasse" name="valider">Enregistrer</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> 
+                    
+                    <div class="modal fade" id="modalEnseignant" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulaire pour saisir les informations de l'enseignant -->
+                                    <form action="" method="post">
+                                        <div class="form-group">
+                                            <label for="nom">Nom de l'enseignant :</label>
+                                            <input type="text" class="form-control" id="nom" name="nomEnsignant" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email :</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div><br>
+                                        <div class="form-group">
+                                            <label for="classe">Ues</label>
+                                            <select class="form-control" id="classe" name="ue" required>
+                                            <?php foreach($ues as $horaire):?>
+                                                    <option value="<?=$horaire["id"]?>"><?=$horaire["nom"]?></option>
+                                            <?php endforeach;  ?>
+                                            </select>
+                                        </div>  
+                                        <div class="form-floating mb-3">
+                                                <input class="form-control" id="chaine-caracteres" type="text" placeholder="mdp" name="mdp" readonly/>
+                                                <label for="mdp">Mot de passe</label>
+                                            </div><br>
+                                        <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
+                                        <button type="submit" class="btn btn-primary" value="addEnseignant" name="valider">Enregistrer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    
                 </main>
                
             </div>
            
         </div>
+        <script>
+            const inputChaine = document.getElementById("chaine-caracteres");
+
+            // Fonction pour générer une chaîne aléatoire de caractères
+            function genererChaineAleatoire(longueur) {
+            const caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let chaine = "";
+            for (let i = 0; i < longueur; i++) {
+                chaine += caracteres[Math.floor(Math.random() * caracteres.length)];
+            }
+            return chaine;
+            }
+
+            // Evénement sur le focus du champ
+            inputChaine.addEventListener("dblclick", () => {
+            // Si la valeur actuelle est vide, générer une chaîne aléatoire
+            if (!inputChaine.value) {
+                inputChaine.value = genererChaineAleatoire(8);
+            }
+            });
+
+            // Fonction pour vérifier la validité de la chaîne
+            function verifierValiditeChaine(chaine) {
+            // La chaîne doit contenir au moins 8 caractères
+            return chaine.length >= 8;
+            }
+
+
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

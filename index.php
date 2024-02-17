@@ -72,6 +72,10 @@
                 <!-- Modification du style des boutons -->
                 <a href="enseignant/authentication/login.php" class="confirm-button">Enseignant</a>
             </div>
+            <div class="col text-center">
+                <!-- Modification du style des boutons -->
+                <a href="Admin/authentication/login.php" class="confirm-button">Admin</a>
+            </div>
         </div>
     </div>
     <footer class="py-4 bg-light mt-auto footer">

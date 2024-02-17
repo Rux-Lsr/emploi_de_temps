@@ -1,0 +1,10 @@
+# Modèle créé le : Sat Feb 17 09:00:00 WAT 2024 
+jour (id_jour, nom_jour) 
+ue (id_ue, code_ue, semestre_ue, #enseignant_id_enseignant, #id_classe) 
+classe (id_classe, nom_classe, #id_departement) 
+salle (id_salle, nom_salle) 
+horaire (id_horaire, heure_debut_horaire, heure_fin_horaire) 
+Enseignant (id_Enseignant, nom_Enseignant, email_Enseignant, #ue_id_ue) 
+departement (id_departement, nom_departement) 
+desiderata (id_desiderata, #id_Enseignant, #id_horaire, #id_jour) 
+planning (id_jour, id_ue, id_classe, id_horaire, id_salle, id_planning) 

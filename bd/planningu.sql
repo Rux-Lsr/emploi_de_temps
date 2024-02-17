@@ -1,10 +1,46 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : sam. 17 fév. 2024 à 07:53
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `planningu`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `administrateur`
+--
 
 CREATE TABLE `administrateur` (
   `id` int(11) NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL
+  `email` varchar(100) DEFAULT NULL,
+  `mdp` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `administrateur`
+--
+
+INSERT INTO `administrateur` (`id`, `nom`, `email`, `mdp`) VALUES
+(0, 'admin', 'admin@gmail.com', '0000'),
+(1, 'admin', 'admin@gmail.com', '0000');
 
 -- --------------------------------------------------------
 
@@ -62,26 +98,6 @@ CREATE TABLE `desiderata` (
   `horaire_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Déchargement des données de la table `desiderata`
---
-
-INSERT INTO `desiderata` (`id`, `enseignantid`, `jour_id`, `horaire_id`) VALUES
-(1, 1, 3, 1),
-(2, 1, 3, 4),
-(3, 1, 1, 1),
-(4, 2, 2, 2),
-(5, 3, 3, 4),
-(6, 4, 4, 4),
-(7, 5, 5, 1),
-(8, 6, 1, 3),
-(9, 1, 2, 4),
-(10, 2, 3, 1),
-(11, 3, 4, 2),
-(12, 4, 5, 3),
-(13, 5, 1, 4),
-(14, 6, 2, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -91,20 +107,21 @@ INSERT INTO `desiderata` (`id`, `enseignantid`, `jour_id`, `horaire_id`) VALUES
 CREATE TABLE `enseignant` (
   `id` int(11) NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL
+  `email` varchar(100) DEFAULT NULL,
+  `numero_tel` varchar(9) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `enseignant`
 --
 
-INSERT INTO `enseignant` (`id`, `nom`, `email`) VALUES
-(1, 'admin', 'admin@gmail.com'),
-(2, 'Enseignant 2', 'enseignant2@email.com'),
-(3, 'Enseignant 3', 'enseignant3@email.com'),
-(4, 'Enseignant 4', 'enseignant4@email.com'),
-(5, 'Enseignant 5', 'enseignant5@email.com'),
-(6, 'Enseignant 6', 'enseignant6@email.com');
+INSERT INTO `enseignant` (`id`, `nom`, `email`, `numero_tel`) VALUES
+(1, 'admin', 'admin@gmail.com', NULL),
+(2, 'Enseignant 2', 'enseignant2@email.com', NULL),
+(3, 'Enseignant 3', 'enseignant3@email.com', NULL),
+(4, 'Enseignant 4', 'enseignant4@email.com', NULL),
+(5, 'Enseignant 5', 'enseignant5@email.com', NULL),
+(6, 'Enseignant 6', 'enseignant6@email.com', NULL);
 
 -- --------------------------------------------------------
 
@@ -195,6 +212,23 @@ CREATE TABLE `planning` (
   `horaire_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `planning`
+--
+
+INSERT INTO `planning` (`id`, `classeid`, `uecode`, `salleid`, `jour_id`, `horaire_id`) VALUES
+(3, 1, 'UE1', 1, 3, 4),
+(5, 2, 'UE2', 1, 2, 2),
+(6, 2, 'UE4', 2, 4, 4),
+(7, 2, 'UE6', 2, 1, 3),
+(8, 2, 'UE2', 3, 3, 1),
+(9, 1, 'UE5', 2, 5, 1),
+(10, 1, 'UE1', 1, 2, 4),
+(11, 1, 'UE3', 1, 4, 2),
+(12, 2, 'UE4', 2, 5, 3),
+(13, 1, 'UE5', 1, 1, 4),
+(14, 2, 'UE6', 2, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -212,7 +246,9 @@ CREATE TABLE `salle` (
 --
 
 INSERT INTO `salle` (`id`, `nom`, `capacite`) VALUES
-(1, 'S001', 50);
+(1, 'S001', 50),
+(2, 'S002', 100),
+(3, 'S003', 60);
 
 -- --------------------------------------------------------
 
@@ -223,20 +259,86 @@ INSERT INTO `salle` (`id`, `nom`, `capacite`) VALUES
 CREATE TABLE `ue` (
   `code` varchar(10) NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
-  `enseignantid` int(11) DEFAULT NULL
+  `enseignantid` int(11) DEFAULT NULL,
+  `classeid` int(11) DEFAULT NULL,
+  `semestre` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `ue`
 --
 
-INSERT INTO `ue` (`code`, `nom`, `enseignantid`) VALUES
-('UE1', 'UE 1', 1),
-('UE2', 'UE 2', 2),
-('UE3', 'UE 3', 3),
-('UE4', 'UE 4', 4),
-('UE5', 'UE 5', 5),
-('UE6', 'UE 6', 6);
+INSERT INTO `ue` (`code`, `nom`, `enseignantid`, `classeid`, `semestre`) VALUES
+('UE1', 'UE 1', 1, 1, 1),
+('UE2', 'UE 2', 2, 2, 1),
+('UE3', 'UE 3', 3, 1, 1),
+('UE4', 'UE 4', 4, 2, 1),
+('UE5', 'UE 5', 5, 1, 1),
+('UE6', 'UE 6', 6, 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `vue_classe`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `vue_classe` (
+`id` int(11)
+,`nom` varchar(100)
+,`departementid` int(11)
+,`niveau` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `vue_enseignant`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `vue_enseignant` (
+`id` int(11)
+,`nom` varchar(100)
+,`email` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `vue_salle`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `vue_salle` (
+`id` int(11)
+,`nom` varchar(100)
+,`capacite` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `vue_classe`
+--
+DROP TABLE IF EXISTS `vue_classe`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_classe`  AS SELECT `classe`.`id` AS `id`, `classe`.`nom` AS `nom`, `classe`.`departementid` AS `departementid`, `classe`.`niveau` AS `niveau` FROM `classe` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `vue_enseignant`
+--
+DROP TABLE IF EXISTS `vue_enseignant`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_enseignant`  AS SELECT `enseignant`.`id` AS `id`, `enseignant`.`nom` AS `nom`, `enseignant`.`email` AS `email` FROM `enseignant` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `vue_salle`
+--
+DROP TABLE IF EXISTS `vue_salle`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_salle`  AS SELECT `salle`.`id` AS `id`, `salle`.`nom` AS `nom`, `salle`.`capacite` AS `capacite` FROM `salle` ;
 
 --
 -- Index pour les tables déchargées
@@ -325,7 +427,8 @@ ALTER TABLE `salle`
 --
 ALTER TABLE `ue`
   ADD PRIMARY KEY (`code`),
-  ADD KEY `enseignantid` (`enseignantid`);
+  ADD KEY `enseignantid` (`enseignantid`),
+  ADD KEY `fk_classeid` (`classeid`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -344,10 +447,16 @@ ALTER TABLE `horaire`
   MODIFY `id` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT pour la table `planning`
+--
+ALTER TABLE `planning`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT pour la table `salle`
 --
 ALTER TABLE `salle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Contraintes pour les tables déchargées
@@ -387,6 +496,7 @@ ALTER TABLE `planning`
 -- Contraintes pour la table `ue`
 --
 ALTER TABLE `ue`
+  ADD CONSTRAINT `fk_classeid` FOREIGN KEY (`classeid`) REFERENCES `classe` (`id`),
   ADD CONSTRAINT `ue_ibfk_1` FOREIGN KEY (`enseignantid`) REFERENCES `enseignant` (`id`);
 COMMIT;
 

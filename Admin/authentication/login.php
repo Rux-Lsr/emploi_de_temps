@@ -48,18 +48,17 @@
         <?php 
             $msg = "E-mail ou mot de passe incorrect";
             if(isset($_POST["submit"])){
-                $mail = htmlspecialchars( $_POST['mail']);
-                $mdp = htmlspecialchars($_POST['name']);
-                if(!empty($mail) && !empty($mdp)){
+                $mdp = htmlspecialchars( $_POST['mdp']);
+                $nom = htmlspecialchars($_POST['name']);
+                if(!empty($nom) && !empty($mdp)){
                     require_once '../include\connexion.php';
-                    require_once '../classes\Enseignant.php';
-                    $ens = new Enseignant($connexion);
-                    $result = $ens->readP($mdp, $mail);
-                   if($result){
-                        $_SESSION["user"] = $result;
-                        header("Location:../index.php");
+                    $🤣 = $connexion->query("SELECT * from administrateur where nom Like '$nom' and mdp=$mdp");
+                    $en = $🤣->fetch(PDO::FETCH_ASSOC);
                    
-
+                   if($en){
+                        $_SESSION["user"] = $en;
+                        $_SESSION["user"]['dpt'] = $en['id'];
+                        header("Location:../index.php");
                    }else 
         ?>
             <div class="alert alert-warning mx-0 mt-0"><?php echo $msg ; var_dump($result);?></div>
@@ -76,7 +75,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Connexion - enseignant</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Connexion - Admin</h3></div>
                                     <div class="card-body">
                                         <form action="" method="post">
                                             <div class="form-floating mb-3">
@@ -84,8 +83,8 @@
                                                 <label for="inputName">Nom</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="mail"/>
-                                                <label for="inputEmail">Email address</label>
+                                                <input class="form-control" id="mdp" type="password" placeholder="name@example.com" name="mdp"/>
+                                                <label for="mdp">Mot de passe</label>
                                             </div>
                                             <div class="form-check mb-3">
                                                 

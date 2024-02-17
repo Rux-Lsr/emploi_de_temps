@@ -66,32 +66,32 @@ $uesArray = $ens->read();
                         </div>
                     </div> 
                     <div class="modal fade" id="modalEnseignant" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Formulaire pour saisir les informations de l'enseignant -->
-                                <form action="traitement.php" method="post">
-                                    <div class="form-group">
-                                        <label for="nom">Nom de l'enseignant :</label>
-                                        <input type="text" class="form-control" id="nom" name="nom" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email :</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div><br>
-                                    <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulaire pour saisir les informations de l'enseignant -->
+                                    <form action="traitement.php" method="post">
+                                        <div class="form-group">
+                                            <label for="nom">Nom de l'enseignant :</label>
+                                            <input type="text" class="form-control" id="nom" name="nom" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email :</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div><br>
+                                        <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div> 
+                    </div> 
                 </main>
                
             </div>

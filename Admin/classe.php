@@ -70,45 +70,7 @@
                         </div>
                         </div>
                     </div> 
-                    <div class="modal fade" id="modalEnseignant" tabindex="-1" role="dialog" aria-labelledby="modalEnseignantLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEnseignantLabel">Ajouter un enseignant</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Formulaire pour saisir les informations de l'enseignant -->
-                                <form action="traitement.php" method="post">
-                                    <div class="form-group">
-                                        <label for="nom">Nom classe :</label>
-                                        <input type="text" class="form-control" id="nom" name="nom" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="code">Code :</label>
-                                        <input type="text" class="form-control" id="code" name="code" required>
-                                    </div><br>
-                                    <div class="form-group">
-                                        <label for="code">Effectif :</label>
-                                        <input type="text" class="form-control" id="code" name="code" required>
-                                    </div><br>
-                                    <div class="form-group">
-                                        <select name="classe" id="classe" class="form-select" aria-label="Default select example">
-                                        <option selected disabled>Departement</option>
-                                            <?php foreach ($departements as $sall): ?>
-                                                <option value="<?=$sall['id_departement']?>"><?=$sall['nom_departement']?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div><br> 
-                                    <!-- Autres champs à ajouter ici (par exemple, prénom, matières enseignées, etc.) -->
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> 
+                   
                 </main>
                
             </div>
