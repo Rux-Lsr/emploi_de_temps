@@ -52,7 +52,7 @@
                 $mdp = htmlspecialchars($_POST['name']);
                 if(!empty($mail) && !empty($mdp)){
                     require_once '../include\connexion.php';
-                    require_once '../classes\Enseignant.php';
+                    require_once '../../classes/Enseignant.php';
                     $ens = new Enseignant($connexion);
                     $result = $ens->readP($mdp, $mail);
                    if($result){
