@@ -3,28 +3,27 @@ session_start();
     require_once "include/connexion.php";
     $sal  = $connexion->query("SELECT * FROM horaire order by id asc", PDO::FETCH_ASSOC);
     $jours = $connexion->query("SELECT * FROM jour order by id asc", PDO::FETCH_ASSOC);
-    $desideratas  = $connexion->query("SELECT desiderata.id, j.nom as jour, h.heuredebut, h.heurefin FROM desiderata join jour j on j.id = jour_id join horaire h on h.id=horaire_id join enseignant on enseignant.id= enseignantid where enseignantid = {$_SESSION["user"]["id"]} order by jour  asc", PDO::FETCH_ASSOC);
-    $stmt = null;
+    $stm  = $connexion->query("SELECT * FROM periodemodification ", PDO::FETCH_ASSOC);
+    $dateLimite = $stm->fetch(PDO::FETCH_ASSOC);
 
     if(isset($_POST["sub"])){
-        $stmt = $connexion->prepare("INSERT INTO `desiderata`(`enseignantid`, `jour_id`, `horaire_id`) VALUES ('{$_SESSION["user"]["id"]}','{$_POST["jour"]}','{$_POST["horaire"]}')");
+        $dateActuelle = date('Y-m-d');
+        $stmt = $connexion->prepare("INSERT INTO `periodemodification`(`datedebut`, `datefin`, `id`) VALUES ('$dateActuelle','{$_POST["dateLimiteModif"]}', 1)");
         $res = $stmt->execute();
 
         if($res)
-            echo"<script>alert('Desirata soumis avec success');location.href='index.php'</script>";
+            echo"<script>alert('Date de fin definie avec success soumis avec success');location.href='index.php'</script>";
         else
-            echo"<script>alert('Echec de soumission du desideratsa');location.href='index.php'</script>";
-    }
-
-    if(isset($_POST["del"])){
-        $sql = "DELETE FROM desiderata where id = {$_POST['del']}";
+            echo"<script>alert('Echec d'enregistrement de la date de fin');location.href='index.php'</script>";
+    }else if(isset($_POST["del"])){
+        $sql = "UPDATE periodemodification set datefin={$_POST["dateLimiteModif"]} where id = 1";
         $stmt = $connexion->prepare("$sql");
         $res = $stmt->execute();
 
         if($res)
-            echo"<script>alert('Supression reussie');location.href='index.php'</script>";
+            echo"<script>alert('modification reussie');location.href='index.php'</script>";
         else
-            echo"<script>alert('Echec de suppression');location.href='index.php'</script>";
+            echo"<script>alert('Echec de modification');location.href='index.php'</script>";
     }
 
 ?>  
@@ -51,59 +50,19 @@ session_start();
                 <main>
                     
                 <div class="container">
-                    <h2>Formulaire de Désidérata</h2>
+                    <h2>date limite de modification</h2>
                     <form action="" method="post">
                     <div class="form-group">
-                        <label for="jour">Jour:</label>
-                        <select class="form-control" id="jour" name="jour">
-                            <?php foreach($jours as $sall):?>
-                                <option value="<?=$sall["id"]?>"><?=$sall["nom"]?></option>
-                                <?php endforeach;  ?>
-                        </select>
+                        <label for="jour">Date:</label>
+                        <input type="date" name="dateLimiteModif" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="horaire">Plage horaire:</label>
-                        <select class="form-control" id="horaire" name="horaire">
-                        <?php foreach($sal as $horaire):?>
-                                <option value="<?=$horaire["id"]?>"><?=$horaire["heuredebut"]?>-<?=$horaire["heurefin"]?></option>
-                                <?php endforeach;  ?>
-                        </select>
-                    </div><br>
-                        <button type="submit" class="btn btn-primary" name="sub">Soumettre</button>
+                        <button type="submit" class="btn btn-success" name="sub">Soumettre</button> <button type="submit" class="btn btn-primary" name="del">Modififier</button>
                     </form>
                 </div>  
-                <h2>Liste des desideratas</h2>
+                
                 <div class="container">
-                <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Jour</th>
-                    <th>Heure de début</th>
-                    <th>Heure de fin</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Remplacez ces lignes par les données de votre base de données -->
-                <?php 
-                $cpt = 0;
-                    foreach($desideratas as $des):
-                ?>
-                <form action="" method="post" id="<?=(++$cpt)?>">
-                    <tr>
-                        <td><?=$des["jour"]?></td>
-                        <td><?=$des["heuredebut"]?></td>
-                        <td><?=$des["heurefin"]?></td>
-                        <td>
-                            <a class="btn btn-primary" name="modif" href="modifier.php?id=<?=$des['id']?>">Modifier</a>
-                            <button type="submit" class="btn btn-danger" name="del" value="<?=$des['id']?>">Supprimer</button>
-                        </td>
-                    </tr>
-                </form>
-                <?php endforeach;?>
-                <!-- Fin des données de la base de données -->
-            </tbody>
-        </table>
+                <h4>Date limite de modification prevue : </h4><?= $dateLimite['datefin']?> 
+                   <br>
                 </div>
                 </main>
             </div>
