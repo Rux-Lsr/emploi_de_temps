@@ -5,7 +5,11 @@
     $classe = new Classe($connexion);
     $classes =  $classe->read(); 
 
-        $🤣 = $connexion->query($sql);
+    $🤣 = $connexion->query("SELECT * from vue_enseignant");
+    $en = $🤣->fetchAll(PDO::FETCH_ASSOC);
+
+    $salles = $connexion->query("SELECT * from vue_salle");
+    $salle = $salles->fetchAll(PDO::FETCH_ASSOC);
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -38,12 +42,19 @@
                                 <div class="col-md-3">
                                     <form action="" method="post">
                                         <div class="form-group">
-                                        <legend>Classe </legend>
-                                            <label for="classe">Classe</label>
-                                            <select class="form-control" id="classe" name="classe">
-                                            <?php foreach($classes as $horaire):?>
-                                                    <option value="<?=$horaire["id"]?>"><?=$horaire["nom"]?></option>
+                                        <legend>Salle </legend>
+                                            <label for="salle">Salle</label>
+                                            <select class="form-control" id="salle" name="salle">
+                                            <?php foreach($salle as $sal):?>
+                                                    <option value="<?=$sal["id"]?>"><?=$sal["nom"]?></option>
                                             <?php endforeach;  ?>
+                                            </select>
+                                        </div>  
+                                        <div class="form-group">
+                                            <label for="classe">Semestres</label>
+                                            <select class="form-control" id="semestre" name="semestreSal">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
                                             </select>
                                         </div>  
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
@@ -53,7 +64,7 @@
                                 </div>
                                 <div class="col-md-3 ">
                                     <form action="" method="post">
-                                        <legend>Classe par semestre</legend>
+                                        <legend>Classe</legend>
                                         <div class="form-group">
                                             <label for="classe">Classe</label>
                                             <select class="form-control" id="classe" name="classeS">
@@ -74,19 +85,27 @@
                                         </div>
                                 </form>
                                 </div>
-                                <div class="col-md-3 bg-primary">
+                                <div class="col-md-3">
                                     <form action="" method="post">
                                             <div class="form-group">
                                             <legend>Enseignant </legend>
                                                 <label for="enseignant">Enseignant</label>
                                                 <select class="form-control" id="enseignant" name="enseignant">
-                                                <?php foreach($classes as $horaire):?>
-                                                        <option value="<?=$horaire["id"]?>"><?=$horaire["nom"]?></option>
+                                                    
+                                                <?php foreach($en as $enseignant):?>
+                                                        <option value="<?=$enseignant["id"]?>"><?=$enseignant["nom"]?></option>
                                                 <?php endforeach;  ?>
                                                 </select>
                                             </div>  
+                                            <div class="form-group">
+                                            <label for="classe">Semestres</label>
+                                                <select class="form-control" id="semestre" name="semestreE">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                </select>
+                                            </div> 
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <button class="btn btn-primary" name="submitClasse" type="submit">Trouver</button>
+                                                <button class="btn btn-primary" name="submitEnseignant" type="submit">Trouver</button>
                                             </div>
                                     </form>
                                 </div>
@@ -97,14 +116,14 @@
                        
                         <?php 
                         if(isset($_POST['submitClasse'])){
-                            $sql = "SELECT p.`id`, c.nom as classe, `uecode` as ue,e.nom as enseignant,s.nom as salle, `jour`.`nom` as jour, h.heuredebut as debut, h.heurefin as fin FROM `planning` p
+                            $sql = "SELECT ue.semestre as Semestre , p.`id`, c.nom as classe, `uecode` as ue,e.nom as enseignant,s.nom as salle, `jour`.`nom` as jour, h.heuredebut as debut, h.heurefin as fin FROM `planning` p
                             JOIN classe c on c.id = p.classeid
                             JOIN salle s on s.id = p.salleid
                             JOIN horaire h on h.id = horaire_id
                             JOIN jour on jour_id = jour.id
                             JOIN ue on ue.code = uecode
                             join enseignant e on e.id = ue.enseignantid
-                            WHERE p.classeid = {$_POST['classe']}
+                            WHERE p.classeid = {$_POST['salle']} and ue.semestre = {$_POST['semestreSal']} 
                             ORDER BY jour.id asc";
 
                             $😊 = $connexion->query($sql);
@@ -113,7 +132,7 @@
                         ?>
                             <div class="card-body">
                                 <table class="table table-light">
-                                <caption>Classe: <?=$res[0]['classe']?></caption>
+                                <caption>Salle: <?= !empty($res) ?$res[0]['salle'] : $_POST['salle'] ;?> Semestre: <?=!empty($res) ?$res[0]['Semestre'] : $_POST['semestreSal'] ;?></caption>
                                     <thead>
                                         <tr> 
                                             <th>Jour</th>
@@ -121,11 +140,15 @@
                                             <th>Classe</th>
                                             <th>Ue</th>
                                             <th>Enseignant</th>
-                                            <th>Salle</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($res as  $value):?>
+                                        <?php 
+                                            if(!empty($res)){
+                                                
+                                            foreach ($res as  $value):
+                                         ?>
                                             
                                         <tr> 
                                             <td><?=$value["jour"]?></td>
@@ -136,11 +159,12 @@
                                             <td><?=$value["salle"]?></td>
                                         </tr>
 
-                                        <?php endforeach;?>     
+                                        <?php endforeach;}else echo "Pas Encore defini";?>     
                                     </tbody>
                                 </table>
                             </div>
                             <?php
+//======================================Else if de la mort qui tue============================================================================================================
                         }else if (isset($_POST['submitSemestre'])) {
                             $sql = "SELECT ue.semestre as Semestre , p.`id`, c.nom as classe, `uecode` as ue,e.nom as enseignant,s.nom as salle, `jour`.`nom` as jour, h.heuredebut as debut, h.heurefin as fin FROM `planning` p
                             JOIN classe c on c.id = p.classeid
@@ -158,7 +182,7 @@
                         ?>
                             <div class="card-body">
                                 <table class="table table-light">
-                                    <caption>Semestre:<?=$_POST['semestre']?>       Classe: <?=$res[0]['classe']?></caption>
+                                    <caption>Semestre:<?=$_POST['semestre']?>       Classe: <?=$_POST['classeS']?></caption>
                                     <thead>
                                         <tr> 
                                             <th>Jour</th>
@@ -169,7 +193,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($res as  $value):?>
+                                         <?php 
+                                            if(!empty($res)){
+                                                
+                                            foreach ($res as  $value):
+                                         ?>
                                             
                                         <tr> 
                                             <td><?=$value["jour"]?></td>
@@ -179,13 +207,57 @@
                                             <td><?=$value["salle"]?></td>
                                         </tr>
 
-                                        <?php endforeach;?>     
+                                        <?php endforeach;}else echo "Pas Encore defini";?>     
+                                    </tbody>
+                                </table>
+                            </div>
+                            <?php
+                        }else if (isset($_POST['submitEnseignant'])) {
+                            $sql = "SELECT ue.semestre as Semestre , p.`id`, c.nom as classe, `uecode` as ue,e.nom as enseignant,s.nom as salle, `jour`.`nom` as jour, h.heuredebut as debut, h.heurefin as fin FROM `planning` p
+                            JOIN classe c on c.id = p.classeid
+                            JOIN salle s on s.id = p.salleid
+                            JOIN horaire h on h.id = horaire_id
+                            JOIN jour on jour_id = jour.id
+                            JOIN ue on ue.code = uecode
+                            join enseignant e on e.id = ue.enseignantid
+                            WHERE e.id = {$_POST['enseignant']} and ue.semestre = {$_POST['semestreE']} 
+                            ORDER BY jour.id asc";
+
+                            $😊 = $connexion->query($sql);
+
+                            $res = $😊->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
+                            <div class="card-body">
+                                <table class="table table-light">
+                                    <caption>Semestre:<?= $_POST['semestreE']?>       Enseignant: <?= $_POST['enseignant'] ?></caption>
+                                    <thead>
+                                        <tr> 
+                                            <th>Ue</th>
+                                            <th>Jour</th>
+                                            <th>Horaire</th>
+                                            <th>Salle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <?php 
+                                            if(!empty($res)){
+                                                
+                                            foreach ($res as  $value):
+                                         ?>
+                                        <tr> 
+                                            <td><?=$value["ue"]?></td>
+                                            <td><?=$value["jour"]?></td>
+                                            <td><?=$value["debut"]?> - <?=$value["fin"]?></td>
+                                            <td><?=$value["salle"]?></td>
+                                        </tr>
+                                        <?php endforeach;}else echo "Pas Encore defini";?>     
                                     </tbody>
                                 </table>
                             </div>
                             <?php
                         }
-                        ?>   
+                        ?>
+                        
                         </div>
                         </div>
                     </div> 
